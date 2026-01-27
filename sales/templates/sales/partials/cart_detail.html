@@ -1,0 +1,56 @@
+<div class="card-body cart-scroll p-0">
+    {% if current_order and current_order.details.exists %}
+    <div class="list-group list-group-flush">
+        {% for detail in current_order.details.all %}
+        <div class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">
+            <div class="me-auto">
+                <div class="fw-bold">{{ detail.menu_item.name }}</div>
+                <small class="text-muted">${{ detail.unit_price }} x {{ detail.quantity }}</small>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="fw-bold me-3">${{ detail.total_price }}</span>
+                <!-- Remove Button -->
+                <button class="btn btn-sm btn-outline-danger border-0"
+                    hx-post="{% url 'sales:pos_remove_item' table.table_id detail.id %}" hx-target="#cart-container">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+        <i class="bi bi-basket display-1 mb-3 opacity-25"></i>
+        <p>Giỏ hàng trống</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Footer / Totals -->
+<div class="card-footer bg-white border-top p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-5 text-secondary">Tổng cộng</span>
+        <span class="fs-4 fw-bold text-dark">
+            {% if current_order %}${{ current_order.total_amount }}{% else %}$0.00{% endif %}
+        </span>
+    </div>
+
+    <div class="d-grid gap-2">
+        {% if current_order and current_order.details.exists %}
+        <form action="{% url 'sales:pos_submit_order' table.table_id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg w-100">
+                Gửi xuống Bếp <i class="bi bi-arrow-right ms-2"></i>
+            </button>
+        </form>
+        {% else %}
+        <button class="btn btn-secondary btn-lg w-100" disabled>
+            Đơn trống
+        </button>
+        {% endif %}
+
+        <a href="{% url 'sales:pos_index' %}" class="btn btn-outline-secondary">
+            Quay lại
+        </a>
+    </div>
+</div>

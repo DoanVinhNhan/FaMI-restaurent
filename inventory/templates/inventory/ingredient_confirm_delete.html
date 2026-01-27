@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Xóa Nguyên liệu - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white py-3">
+                <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Xác nhận Xóa</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="fs-5">Bạn có chắc chắn muốn xóa nguyên liệu này không?</p>
+                <div class="alert alert-warning d-inline-block">
+                    <strong>{{ ingredient.name }}</strong> (SKU: {{ ingredient.sku }})
+                </div>
+                <p class="text-muted small mt-2">Hành động này không thể hoàn tác.</p>
+
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'inventory:ingredient_list' %}" class="btn btn-outline-secondary px-4">Hủy
+                            bỏ</a>
+                        <button type="submit" class="btn btn-danger px-4">Xóa vĩnh viễn</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

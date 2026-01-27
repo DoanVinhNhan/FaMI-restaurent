@@ -1,0 +1,45 @@
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-warning">Inventory Variance Report</h6>
+    </div>
+    <div class="card-body">
+        {% for ticket in tickets %}
+        <div class="mb-4 border-bottom pb-3">
+            <h6>Ticket #{{ ticket.ticket_id }} <small class="text-muted">({{ ticket.created_at|date:"Y-m-d H:i"
+                    }})</small></h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered mt-2">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ingredient</th>
+                            <th>System Qty</th>
+                            <th>Actual Qty</th>
+                            <th>Variance</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in ticket.items_with_variance %}
+                        <tr>
+                            <td>{{ item.ingredient }}</td>
+                            <td>{{ item.system_qty }}</td>
+                            <td>{{ item.actual_qty }}</td>
+                            <td class="{% if item.variance < 0 %}text-danger{% else %}text-success{% endif %}">
+                                {{ item.variance }}
+                            </td>
+                            <td>{{ item.reason }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No discrepancies found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-warning">No completed Stock Take tickets found in this period.</div>
+        {% endfor %}
+    </div>
+</div>

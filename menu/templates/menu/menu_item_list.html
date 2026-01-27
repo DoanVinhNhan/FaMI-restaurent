@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Thực đơn - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-utensils me-2"></i>Quản lý Thực đơn</h2>
+        <div>
+            <a href="?view=active" class="btn btn-outline-primary {% if view_mode == 'active' %}active{% endif %}">Đang
+                bán</a>
+            <a href="?view=all" class="btn btn-outline-secondary {% if view_mode == 'all' %}active{% endif %}">Tất
+                cả</a>
+            <a href="{% url 'menu:menu_create' %}" class="btn btn-primary ms-2"><i class="fas fa-plus me-1"></i>Thêm Món
+                mới</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>SKU</th>
+                            <th>Tên Món</th>
+                            <th>Category</th>
+                            <th>Giá bán (Hiện tại)</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menu_items %}
+                        <tr>
+                            <td style="width: 80px;" class="ps-3">
+                                {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-thumbnail"
+                                    style="height: 50px; width: 50px; object-fit: cover;">
+                                {% else %}
+                                <span class="text-muted small"><i class="fas fa-camera fa-2x"></i></span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.sku }}</td>
+                            <td class="fw-bold">{{ item.name }}</td>
+                            <td>{{ item.category.name|default:"-" }}</td>
+                            <td class="text-success fw-bold">
+                                {% if item.get_current_price %}
+                                {{ item.get_current_price.selling_price|floatform:0 }} ₫
+                                {% else %}
+                                {{ item.price|floatform:0 }} ₫ <span class="text-muted small">(Gốc)</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.status == 'ACTIVE' %}
+                                <span class="badge bg-success">Đang bán</span>
+                                {% elif item.status == 'OUT_OF_STOCK' %}
+                                <span class="badge bg-warning text-dark">Hết hàng</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Ngừng bán</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'menu:menu_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
+                                    title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                                {% if item.status == 'ACTIVE' %}
+                                <a href="{% url 'menu:menu_delete' item.pk %}" class="btn btn-sm btn-outline-danger"
+                                    title="Ngừng bán"><i class="fas fa-ban"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fas fa-hamburger fa-3x mb-3 d-block"></i>
+                                Chưa có món ăn nào. Hãy thêm mới!
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}&view={{ view_mode }}">Trước</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Trước</span></li>
+            {% endif %}
+
+            <li class="page-item disabled"><span class="page-link">Trang {{ page_obj.number }} / {{
+                    page_obj.paginator.num_pages }}</span></li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link"
+                    href="?page={{ page_obj.next_page_number }}&view={{ view_mode }}">Sau</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Sau</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

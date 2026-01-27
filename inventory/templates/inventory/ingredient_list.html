@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Nguyên liệu - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="text-secondary mb-0">
+            <i class="fas fa-boxes text-primary me-2"></i>Danh sách Nguyên liệu
+        </h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'inventory:ingredient_add' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Thêm Nguyên liệu
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                    <input type="text" name="q" class="form-control" placeholder="Tìm theo SKU hoặc Tên..."
+                        value="{{ search_query }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-secondary w-100">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">SKU</th>
+                        <th>Tên Nguyên liệu</th>
+                        <th>Đơn vị</th>
+                        <th>Giá vốn / ĐV</th>
+                        <th class="text-center">Cảnh báo tồn kho</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingredient in ingredients %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-primary">{{ ingredient.sku }}</td>
+                        <td>{{ ingredient.name }}</td>
+                        <td><span class="badge bg-info text-dark">{{ ingredient.unit }}</span></td>
+                        <td>{{ ingredient.cost_per_unit|floatform:2 }} ₫</td>
+                        <td class="text-center">{{ ingredient.alert_threshold }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'inventory:ingredient_edit' ingredient.pk %}"
+                                class="btn btn-sm btn-outline-primary me-1" title="Chỉnh sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'inventory:ingredient_delete' ingredient.pk %}"
+                                class="btn btn-sm btn-outline-danger" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fas fa-box-open fa-3x mb-3 d-block"></i>
+                            Chưa có nguyên liệu nào. Hãy thêm mới!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <div class="card-footer bg-white py-3">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">Trước</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Trước</span></li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Trang {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">Sau</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Sau</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

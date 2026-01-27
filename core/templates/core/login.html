@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng nhập - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg" style="width: 400px; border-radius: 15px;">
+        <div class="card-header bg-primary text-white text-center py-3"
+            style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h4 class="mb-0"><i class="fas fa-lock me-2"></i>Đăng nhập Hệ thống</h4>
+        </div>
+        <div class="card-body p-4">
+
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                Tên đăng nhập hoặc mật khẩu không đúng.
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'core:login' %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Tên đăng nhập</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" id="id_username"
+                            placeholder="Nhập username" required autofocus>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" name="password" class="form-control" id="id_password"
+                            placeholder="Nhập password" required>
+                    </div>
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Đăng nhập
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-muted text-center py-3">
+            <small>Hệ thống quản lý nhà hàng FaMÌ v1.0</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Xóa Bàn - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-danger shadow">
+                <div class="card-header bg-danger text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Xác nhận Xóa Bàn</h5>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <p class="fs-5">Bạn có chắc chắn muốn xóa bàn này?</p>
+
+                    <div class="alert alert-light border d-inline-block px-4 py-2">
+                        <strong class="text-danger fs-3">{{ object.table_name }}</strong><br>
+                        <span class="text-muted">Sức chứa: {{ object.capacity }}</span>
+                    </div>
+
+                    <p class="text-muted small mt-3">Hành động này không thể hoàn tác.</p>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'sales:table_list' %}" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="fas fa-trash-alt me-2"></i>Xóa vĩnh viễn
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

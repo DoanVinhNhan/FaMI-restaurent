@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+        <h2>Stock Take History</h2>
+        <a href="{% url 'inventory:stock_take_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> New Stock Take
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Code</th>
+                        <th>Date</th>
+                        <th>Creator</th>
+                        <th>Status</th>
+                        <th>Variance Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="fw-bold">{{ ticket.code }}</td>
+                        <td>{{ ticket.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>{{ ticket.creator.username|default:"System" }}</td>
+                        <td>
+                            {% if ticket.status == 'COMPLETED' %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif ticket.status == 'CANCELLED' %}
+                            <span class="badge bg-secondary">Cancelled</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td class="{{ ticket.variance_total_value|yesno:'text-danger,text-success,text-muted' }}">
+                            {{ ticket.variance_total_value|floatformat:2 }}
+                        </td>
+                        <td>
+                            <a href="{% url 'inventory:stock_take_detail' ticket.ticket_id %}"
+                                class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No stock take tickets found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

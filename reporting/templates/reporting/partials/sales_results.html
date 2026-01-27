@@ -1,0 +1,55 @@
+<div class="card shadow">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-success">Sales Report Results</h6>
+        <a href="{% url 'reporting:sales_report' %}?start_date={{ summary.start_date }}&end_date={{ summary.end_date }}&export=csv"
+            class="btn btn-sm btn-outline-success">
+            <i class="bi bi-download"></i> Export CSV
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h5>Total Revenue</h5>
+                        <h3 class="text-success">{{ summary.total_revenue }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h5>Total Orders</h5>
+                        <h3 class="text-primary">{{ summary.total_orders }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Top Selling Items</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in summary.top_selling_items %}
+                    <tr>
+                        <td>{{ item.menu_item__name }}</td>
+                        <td>{{ item.total_qty }}</td>
+                        <td>{{ item.total_sales }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No sales found in this period.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{% load static %}
+
+<div class="row">
+    <!-- KITCHEN STATION COLUMN -->
+    <div class="col-md-6 border-end">
+        <h3 class="bg-danger text-white p-2 text-center rounded">
+            <i class="bi bi-fire"></i> Kitchen Station
+        </h3>
+        <div class="d-flex flex-wrap align-content-start gap-3">
+            {% for ticket in kitchen_tickets %}
+            {% include "kitchen/partials/ticket_card.html" with ticket=ticket station="Kitchen" %}
+            {% empty %}
+            <div class="alert alert-light w-100 text-center">No active kitchen orders</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- BAR STATION COLUMN -->
+    <div class="col-md-6">
+        <h3 class="bg-primary text-white p-2 text-center rounded">
+            <i class="bi bi-cup-straw"></i> Bar Station
+        </h3>
+        <div class="d-flex flex-wrap align-content-start gap-3">
+            {% for ticket in bar_tickets %}
+            {% include "kitchen/partials/ticket_card.html" with ticket=ticket station="Bar" %}
+            {% empty %}
+            <div class="alert alert-light w-100 text-center">No active bar orders</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="text-muted small text-end mt-3">
+    Last updated: {{ last_updated|date:"H:i:s" }}
+</div>

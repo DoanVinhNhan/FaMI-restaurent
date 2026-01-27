@@ -1,0 +1,38 @@
+<div class="card shadow-sm" style="width: 100%; max-width: 350px;">
+    <div
+        class="card-header d-flex justify-content-between align-items-center {% if station == 'Kitchen' %}bg-warning{% else %}bg-info{% endif %} bg-opacity-25">
+        <strong>Order #{{ ticket.order.id }}</strong>
+        <small>{{ ticket.order.created_at|timesince }} ago</small>
+    </div>
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for item in ticket.items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-secondary rounded-pill me-2">{{ item.quantity }}x</span>
+                    <strong>{{ item.menu_item.name }}</strong>
+                    {% if item.note %}
+                    <div class="text-danger small fst-italic">Note: {{ item.note }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Status Action Button -->
+                <div class="ms-2">
+                    {% if item.status == 'Pending' %}
+                    <button class="btn btn-sm btn-outline-primary"
+                        hx-post="{% url 'kitchen:update_item_status' item.id %}" hx-vals='{"next_status": "Cooking"}'
+                        hx-target="#kds-board-container" hx-swap="innerHTML">
+                        Cook
+                    </button>
+                    {% elif item.status == 'Cooking' %}
+                    <button class="btn btn-sm btn-success" hx-post="{% url 'kitchen:update_item_status' item.id %}"
+                        hx-vals='{"next_status": "Paid"}' hx-target="#kds-board-container" hx-swap="innerHTML">
+                        Done
+                    </button>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

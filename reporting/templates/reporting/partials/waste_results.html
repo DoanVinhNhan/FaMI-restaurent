@@ -1,0 +1,33 @@
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-danger">Kitchen Waste Analysis</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Reason Code</th>
+                        <th>Reason Description</th>
+                        <th>Total Items Wasted</th>
+                        <th>Financial Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in waste_data %}
+                    <tr>
+                        <td><span class="badge bg-danger">{{ row.reason__code }}</span></td>
+                        <td>{{ row.reason__description }}</td>
+                        <td>{{ row.total_qty }}</td>
+                        <td>{{ row.total_loss }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No waste records found in this period.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

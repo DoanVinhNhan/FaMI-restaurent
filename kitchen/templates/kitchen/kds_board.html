@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+
+{% block title %}Kitchen Display System | FaMÌ{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kitchen Display System</h2>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+            <label class="form-check-label" for="autoRefresh">Auto-Refresh (10s)</label>
+        </div>
+    </div>
+
+    <!-- 
+        The hx-get attribute sets up polling.
+        hx-trigger="every 10s" fires the request repeatedly.
+    -->
+    <div id="kds-board-container" hx-get="{% url 'kitchen:kds_board' %}" hx-trigger="every 10s" hx-swap="innerHTML">
+
+        <!-- Load initial content -->
+        {% include "kitchen/partials/board_content.html" %}
+    </div>
+</div>
+
+<!-- HTMX Library (Ensure this is in your base.html, if not, add here for test) -->
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+<script>
+    // Simple script to toggle HTMX polling based on checkbox
+    document.getElementById('autoRefresh').addEventListener('change', function () {
+        var container = document.getElementById('kds-board-container');
+        if (this.checked) {
+            htmx.process(container); // Re-enabling requires re-processing or logic adjustment
+            // For simple toggle, reloading page is easiest or toggling hx-trigger attribute
+            container.setAttribute('hx-trigger', 'every 10s');
+        } else {
+            container.setAttribute('hx-trigger', 'none');
+        }
+        htmx.process(container);
+    });
+</script>
+{% endblock %}

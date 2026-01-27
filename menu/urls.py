@@ -1,0 +1,18 @@
+from django.urls import path
+from . import views
+
+app_name = 'menu'
+
+urlpatterns = [
+    # List view
+    path('', views.MenuItemListView.as_view(), name='menu_list'),
+    
+    # Create view (Function-based to handle multi-form)
+    path('create/', views.menu_item_create_view, name='menu_create'),
+    
+    # Update view
+    path('<int:pk>/edit/', views.MenuItemUpdateView.as_view(), name='menu_edit'),
+    
+    # Soft Delete view
+    path('<int:pk>/delete/', views.menu_item_soft_delete_view, name='menu_delete'),
+]

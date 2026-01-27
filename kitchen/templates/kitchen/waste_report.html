@@ -1,0 +1,95 @@
+{% extends "core/base.html" %}
+
+{% block title %}Report Kitchen Waste{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-trash"></i> Report Kitchen Waste</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="post" action="">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.item_type.id_for_label }}" class="form-label">Type of Waste</label>
+                            {{ form.item_type }}
+                            <!-- Add Bootstrap class via widget in form or JS, simplified here -->
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.item_id.id_for_label }}" class="form-label">Item ID</label>
+                            <input type="number" name="item_id" class="form-control" required id="id_item_id"
+                                placeholder="Enter ID from reference list below">
+                            <div class="form-text">See reference list below for IDs.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+                                <input type="number" step="0.01" name="quantity" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.reason.id_for_label }}" class="form-label">Reason</label>
+                                {{ form.reason }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">Submit Report</button>
+                            <a href="{% url 'kitchen:waste_report' %}" class="btn btn-secondary">Clear Form</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Reference Lists for IDs (In real app, use Search/Select2) -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">Menu Items</div>
+                        <ul class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            {% for item in menu_items %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ item.name }}
+                                <span class="badge bg-primary rounded-pill">ID: {{ item.pk }}</span>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-muted">No menu items found.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">Ingredients</div>
+                        <ul class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            {% for ing in ingredients %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ ing.name }}
+                                <span class="badge bg-secondary rounded-pill">ID: {{ ing.pk }}</span>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-muted">No ingredients found.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
