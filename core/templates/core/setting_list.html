@@ -1,49 +1,85 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Thiết lập Hệ thống - FaMÌ Admin{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>System Settings</h2>
-    {% for group in groups %}
-    <div class="card mb-4">
-        <div class="card-header">
-            {{ group.group_name }}
-        </div>
-        <div class="card-body">
-            <p>{{ group.description }}</p>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Setting Key</th>
-                            <th>Value</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for setting in group.settings.all %}
-                        <tr>
-                            <td>{{ setting.setting_key }}</td>
-                            <td>
-                                {{ setting.setting_value }}
-                                {% if not setting.is_active %} (Inactive){% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'core:setting_edit' setting.pk %}"
-                                    class="btn btn-sm btn-primary">Edit</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="3">No settings in this group.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4"><i class="fas fa-cogs me-2"></i>Thiết lập Hệ thống</h2>
+
+        {% if groups %}
+        <div class="accordion" id="settingsAccordion">
+            {% for group in groups %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}"
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-controls="collapse{{ forloop.counter }}">
+                        <strong>{{ group.group_name }}</strong>
+                        {% if group.description %}
+                        <span class="text-muted ms-2 small">({{ group.description }})</span>
+                        {% endif %}
+                    </button>
+                </h2>
+                <div id="collapse{{ forloop.counter }}"
+                    class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                    aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#settingsAccordion">
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 30%;">Tham số (Key)</th>
+                                        <th style="width: 40%;">Giá trị (Value)</th>
+                                        <th style="width: 15%;">Trạng thái</th>
+                                        <th style="width: 15%;">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for setting in group.settings.all %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold text-primary">{{ setting.setting_key }}</div>
+                                            <small class="text-muted">{{ setting.description }}</small>
+                                            <!-- Assuming description field exists or we use help_text if available, but models usually have help_text on field def. Wait, model definition has help_text on fields, but not a separate description field for the setting itself, only for group. Let me check model again. Model only has setting_key, setting_value, data_type, is_active, group. No title/description for setting itself besides key. -->
+                                        </td>
+                                        <td>
+                                            <div class="text-break" style="max-height: 100px; overflow-y: auto;">
+                                                {{ setting.setting_value }}
+                                            </div>
+                                            <span class="badge bg-secondary">{{ setting.get_data_type_display }}</span>
+                                        </td>
+                                        <td>
+                                            {% if setting.is_active %}
+                                            <span class="badge bg-success"><i
+                                                    class="fas fa-check-circle me-1"></i>Active</span>
+                                            {% else %}
+                                            <span class="badge bg-danger"><i
+                                                    class="fas fa-times-circle me-1"></i>Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'core:setting_edit' setting.pk %}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>Chưa có nhóm cấu hình nào được định nghĩa.
+        </div>
+        {% endif %}
     </div>
-    {% empty %}
-    <p>No setting groups found.</p>
-    {% endfor %}
 </div>
 {% endblock %}

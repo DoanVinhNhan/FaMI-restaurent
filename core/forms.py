@@ -32,3 +32,14 @@ class CustomUserChangeForm(UserChangeForm):
             'is_staff': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_superuser': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+from .models import SystemSetting
+
+class SystemSettingForm(forms.ModelForm):
+    class Meta:
+        model = SystemSetting
+        fields = ('setting_value', 'is_active')
+        widgets = {
+            'setting_value': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

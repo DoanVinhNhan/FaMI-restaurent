@@ -71,3 +71,24 @@ class PricingForm(forms.ModelForm):
         # if date < timezone.now().date():
         #     raise forms.ValidationError("Effective date cannot be in the past.")
         return date_val
+
+# --- Recipe Forms ---
+from .models import Recipe, RecipeIngredient
+
+class RecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['instructions']
+        widgets = {
+            'instructions': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter preparation instructions...'}),
+        }
+
+class RecipeIngredientForm(forms.ModelForm):
+    class Meta:
+        model = RecipeIngredient
+        fields = ['ingredient', 'quantity', 'unit']
+        widgets = {
+            'ingredient': forms.Select(attrs={'class': 'form-select'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.0001'}),
+            'unit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. g, ml, pcs'}),
+        }

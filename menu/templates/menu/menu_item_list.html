@@ -64,6 +64,8 @@
                             <td class="text-end pe-4">
                                 <a href="{% url 'menu:menu_item_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
                                     title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                                <a href="{% url 'menu:recipe_manage' item.pk %}" class="btn btn-sm btn-outline-info"
+                                    title="Công thức"><i class="fas fa-scroll"></i></a>
                                 {% if item.status == 'ACTIVE' %}
                                 <a href="{% url 'menu:menu_delete' item.pk %}" class="btn btn-sm btn-outline-danger"
                                     title="Ngừng bán"><i class="fas fa-ban"></i></a>

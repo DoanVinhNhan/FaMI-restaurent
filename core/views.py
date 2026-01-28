@@ -103,6 +103,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 from .models import SettingGroup, SystemSetting
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
+from .forms import SystemSettingForm # Import the form
 
 class SettingGroupListView(LoginRequiredMixin, ListView):
     """
@@ -120,7 +121,7 @@ class SystemSettingUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     Form to update a specific system setting value.
     """
     model = SystemSetting
-    fields = ['setting_value', 'is_active']
+    form_class = SystemSettingForm # Use the form class
     template_name = 'core/setting_form.html'
     success_message = "Setting updated successfully."
     

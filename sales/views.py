@@ -273,6 +273,16 @@ def submit_order(request: HttpRequest, table_id: int) -> HttpResponse:
     order.status = Order.Status.COOKING
     order.save()
     
+    # --- Auto Deduct Inventory (Task 022) ---
+    try:
+        from inventory.services import InventoryService
+        InventoryService.deduct_ingredients_for_order(order)
+    except Exception as e:
+        logger.error(f"Inventory deduction failed: {e}")
+        # We don't rollback the order status change, but we log the error.
+        # Ideally this should be in the same transaction block if creating Order Service.
+        messages.warning(request, f"Order sent to kitchen, but inventory update failed: {e}")
+
     # Push Notification
     try:
         from core.services import NotificationService

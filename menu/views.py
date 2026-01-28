@@ -173,3 +173,75 @@ def menu_item_soft_delete_view(request: HttpRequest, pk: int) -> HttpResponse:
         return redirect('menu:menu_list')
     
     return render(request, 'menu/menu_item_confirm_delete.html', {'object': menu_item})
+
+# --- Recipe Management Views (UC: Manage Recipes) ---
+from .models import Recipe, RecipeIngredient
+from .forms import RecipeForm, RecipeIngredientForm
+
+@login_required
+@user_passes_test(is_manager)
+def menu_recipe_view(request: HttpRequest, pk: int) -> HttpResponse:
+    """
+    Manage Recipe for a specific MenuItem.
+    Handles:
+    - Updating instructions.
+    - Adding ingredients.
+    - Removing ingredients.
+    """
+    menu_item = get_object_or_404(MenuItem, pk=pk)
+    
+    # Get or Create Recipe
+    recipe, created = Recipe.objects.get_or_create(menu_item=menu_item)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'save_instructions':
+            recipe_form = RecipeForm(request.POST, instance=recipe)
+            if recipe_form.is_valid():
+                recipe_form.save()
+                messages.success(request, "Recipe instructions updated.")
+            else:
+                messages.error(request, "Error updating instructions.")
+                
+        elif action == 'add_ingredient':
+            ing_form = RecipeIngredientForm(request.POST)
+            if ing_form.is_valid():
+                # Check duplicate
+                ingredient = ing_form.cleaned_data['ingredient']
+                if RecipeIngredient.objects.filter(recipe=recipe, ingredient=ingredient).exists():
+                     messages.warning(request, f"Ingredient '{ingredient.name}' is already in the recipe.")
+                else:
+                    new_ing = ing_form.save(commit=False)
+                    new_ing.recipe = recipe
+                    new_ing.save()
+                    messages.success(request, f"Added '{ingredient.name}' to recipe.")
+                    return redirect('menu:recipe_manage', pk=pk) # Redirect to clear form
+            else:
+                messages.error(request, "Invalid ingredient data.")
+                
+        elif action == 'remove_ingredient':
+            ri_id = request.POST.get('ri_id')
+            try:
+                ri = RecipeIngredient.objects.get(pk=ri_id, recipe=recipe)
+                name = ri.ingredient.name
+                ri.delete()
+                messages.success(request, f"Removed '{name}' from recipe.")
+            except RecipeIngredient.DoesNotExist:
+                messages.error(request, "Ingredient not found.")
+                
+        return redirect('menu:recipe_manage', pk=pk)
+
+    else:
+        recipe_form = RecipeForm(instance=recipe)
+        ingredient_form = RecipeIngredientForm()
+
+    context = {
+        'menu_item': menu_item,
+        'recipe': recipe,
+        'recipe_form': recipe_form,
+        'ingredient_form': ingredient_form,
+        'ingredients': recipe.ingredients.select_related('ingredient').all(),
+        'title': f'Recipe: {menu_item.name}'
+    }
+    return render(request, 'menu/recipe_form.html', context)

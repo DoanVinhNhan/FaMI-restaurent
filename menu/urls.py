@@ -14,5 +14,9 @@ urlpatterns = [
     path('items/<int:pk>/edit/', views.menu_item_update_view, name='menu_item_edit'),
     
     # Soft Delete view
+    # Soft Delete view
     path('<int:pk>/delete/', views.menu_item_soft_delete_view, name='menu_delete'),
+
+    # Recipe Management (UC: Manage Recipes)
+    path('items/<int:pk>/recipe/', views.menu_recipe_view, name='recipe_manage'),
 ]
