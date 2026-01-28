@@ -58,8 +58,8 @@
                                 <div class="input-group input-group-lg">
                                     <span class="input-group-text">$</span>
                                     <input type="number" step="0.01" class="form-control fw-bold text-end"
-                                        name="received_amount" id="received_amount" value="{{ order.total_amount }}"
-                                        min="{{ order.total_amount }}">
+                                        name="received_amount" id="received_amount" value="{{ new_total|default:order.total_amount }}"
+                                        min="{{ new_total|default:order.total_amount }}">
                                 </div>
                             </div>
 
@@ -74,9 +74,15 @@
                             <label class="form-label fw-bold">Mã khuyến mãi (Nếu có)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-ticket-perforated"></i></span>
-                                <input type="text" class="form-control" name="promo_code"
-                                    placeholder="NHAP MA GIAM GIA">
+                                <input type="text" class="form-control" name="promo_code" id="promo_code"
+                                    placeholder="NHAP MA GIAM GIA" value="{{ promo_code|default:'' }}">
+                                <button type="submit" name="apply_promo" class="btn btn-outline-secondary">Áp dụng</button>
                             </div>
+                            {% if discount %}
+                            <div class="mt-2 alert alert-info">
+                                <strong>Giảm:</strong> ${{ discount }} — <strong>Tổng sau giảm:</strong> ${{ new_total }}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="d-grid gap-2 mt-4">

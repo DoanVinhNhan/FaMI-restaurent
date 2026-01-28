@@ -74,6 +74,41 @@ class PaymentProcessingTests(TestCase):
         self.assertEqual(self.order.total_amount, Decimal('450.00')) # Total updated
         self.assertEqual(self.order.status, Order.Status.PAID)
 
+        # Invoice snapshot checks
+        inv = self.order.invoice
+        self.assertEqual(inv.final_total, Decimal('450.00'))
+        self.assertEqual(inv.original_total, Decimal('500.00'))
+        self.assertEqual(inv.discount_amount, Decimal('50.00'))
+        self.assertIsNotNone(inv.promotion)
+        self.assertEqual(inv.promotion.promo_code, 'SAVE10')
+
+    def test_promotion_insufficient_payment_logs_failed_transaction(self):
+        # Create Promo: 10% off
+        Promotion.objects.create(
+            name="Test Promo 2",
+            promo_code="SAVE20", 
+            discount_type=DiscountType.PERCENTAGE, 
+            discount_value=20, 
+            start_date="2020-01-01 00:00", 
+            end_date="2099-01-01 00:00"
+        )
+
+        # Discounted total = 500 - 100 = 400, pay only 350
+        result = PaymentController.process_payment(
+            self.order.id, 
+            amount=Decimal('350.00'), 
+            method='CASH', 
+            promo_code='SAVE20'
+        )
+
+        self.assertFalse(result['success'])
+        tx = Transaction.objects.order_by('-transaction_date').first()
+        self.assertIsNotNone(tx)
+        self.assertEqual(tx.status, Transaction.PaymentStatus.FAILED)
+        # It should record promo and discount amount
+        self.assertIsNotNone(tx.promotion)
+        self.assertEqual(tx.discount_amount, Decimal('100.00'))
+
     def test_insufficient_payment(self):
         request = self.factory.post('/sales/pos/table/1/pay/', {
             'payment_method': 'CASH',
@@ -92,3 +127,34 @@ class PaymentProcessingTests(TestCase):
         
         self.order.refresh_from_db()
         self.assertNotEqual(self.order.status, Order.Status.PAID)
+
+    def test_apply_promo_preview(self):
+        # Create Promo: 10% off
+        Promotion.objects.create(
+            name="Preview Promo",
+            promo_code="PRE10",
+            discount_type=DiscountType.PERCENTAGE,
+            discount_value=10,
+            start_date="2020-01-01 00:00",
+            end_date="2099-01-01 00:00"
+        )
+
+        request = self.factory.post('/sales/pos/table/1/pay/', {
+            'payment_method': 'CASH',
+            'apply_promo': '1',
+            'promo_code': 'PRE10',
+            'received_amount': str(self.order.total_amount)
+        })
+        request.user = self.user
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = process_payment(request, self.table.pk)
+
+        # Should render preview (200) and not change order
+        self.assertEqual(response.status_code, 200)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.total_amount, Decimal('500.00'))
+        # Discount should appear in rendered page
+        self.assertIn(b'50.00', response.content)
