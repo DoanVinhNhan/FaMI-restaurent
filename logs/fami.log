@@ -8131,3 +8131,43 @@ Traceback (most recent call last):
                    ^^^^^^^^^^^
 UnboundLocalError: cannot access local variable 'action_type' where it is not associated with a value
 ERROR 2026-01-28 22:03:18,126 basehttp "POST /sales/pos/table/3/pay/?action=pay_and_clear HTTP/1.1" 500 88231
+WARNING 2026-01-28 23:53:08,424 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-28 23:53:08,424 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4667
+WARNING 2026-01-28 23:53:14,928 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-28 23:53:14,929 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4667
+WARNING 2026-01-28 23:53:20,609 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-28 23:53:20,610 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4667
+ERROR 2026-01-29 00:04:21,028 exception Invalid HTTP_HOST header: 'collaboration-controlling-run-hydrogen.trycloudflare.com'. You may need to add 'collaboration-controlling-run-hydrogen.trycloudflare.com' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'collaboration-controlling-run-hydrogen.trycloudflare.com'. You may need to add 'collaboration-controlling-run-hydrogen.trycloudflare.com' to ALLOWED_HOSTS.
+WARNING 2026-01-29 00:04:21,064 log Bad Request: /
+WARNING 2026-01-29 00:04:21,064 basehttp "GET / HTTP/1.1" 400 75880
+ERROR 2026-01-29 00:04:21,994 exception Invalid HTTP_HOST header: 'collaboration-controlling-run-hydrogen.trycloudflare.com'. You may need to add 'collaboration-controlling-run-hydrogen.trycloudflare.com' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'collaboration-controlling-run-hydrogen.trycloudflare.com'. You may need to add 'collaboration-controlling-run-hydrogen.trycloudflare.com' to ALLOWED_HOSTS.
+WARNING 2026-01-29 00:04:22,009 log Bad Request: /favicon.ico
+WARNING 2026-01-29 00:04:22,009 basehttp "GET /favicon.ico HTTP/1.1" 400 75758
+WARNING 2026-01-29 00:06:03,327 log Not Found: /favicon.ico
+WARNING 2026-01-29 00:06:03,328 basehttp "GET /favicon.ico HTTP/1.1" 404 4589

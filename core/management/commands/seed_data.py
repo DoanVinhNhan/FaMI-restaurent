@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 
 # Models
 from core.models import SystemSetting
-from inventory.models import Ingredient, InventoryItem, StockTakeTicket, StockTakeDetail
+from inventory.models import Ingredient, InventoryItem, StockTakeTicket, StockTakeDetail, InventoryLog
 from menu.models import Category, MenuItem, Pricing, Recipe, RecipeIngredient
 from sales.models import RestaurantTable, Order, OrderDetail
 
@@ -39,12 +39,14 @@ class Command(BaseCommand):
                 self.create_menu()
                 self.create_tables()
                 self.create_historical_orders()
+                self.create_waste_logs()
             self.stdout.write(self.style.SUCCESS('Successfully seeded database!'))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error seeding data: {e}'))
 
     def clean_data(self):
         # Delete dependent first
+        InventoryLog.objects.all().delete()
         StockTakeDetail.objects.all().delete()
         StockTakeTicket.objects.all().delete()
         OrderDetail.objects.all().delete()
@@ -321,4 +323,41 @@ class Command(BaseCommand):
                 total_orders_created += 1
                 
         self.stdout.write(f"- Created {total_orders_created} historical orders.")
+
+    def create_waste_logs(self):
+        self.stdout.write("- Simulating Waste Logs...")
+        from inventory.models import InventoryLog
+        
+        reasons = ['Spoiled', 'Expired', 'Dropped', 'Burnt', 'Quality Check']
+        end_date = timezone.now()
+        start_date = end_date - timedelta(days=30)
+        
+        total_waste = 0
+        ingredients = list(self.ingredients.values())
+        manager = User.objects.filter(role='MANAGER').first() or User.objects.first()
+        
+        for day in range(31):
+            current_date = start_date + timedelta(days=day)
+            
+            # Randomly 1-3 waste events per day
+            num_events = random.randint(1, 3)
+            
+            for _ in range(num_events):
+                ing = random.choice(ingredients)
+                qty = Decimal(random.uniform(0.1, 1.5)).quantize(Decimal('0.01'))
+                
+                log = InventoryLog.objects.create(
+                    ingredient=ing,
+                    user=manager,
+                    change_type='WASTE',
+                    quantity_change=-qty, # Negative for deduction
+                    reason=random.choice(reasons),
+                    # created_at handled below
+                )
+                # Manually set created_at 
+                InventoryLog.objects.filter(pk=log.pk).update(created_at=current_date)
+                
+                total_waste += 1
+                
+        self.stdout.write(f"- Created {total_waste} waste records.")
 
