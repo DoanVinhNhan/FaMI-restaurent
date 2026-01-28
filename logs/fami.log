@@ -8112,3 +8112,22 @@ WARNING 2026-01-28 19:27:15,144 log Not Found: /favicon.ico
 WARNING 2026-01-28 19:27:15,145 basehttp "GET /favicon.ico HTTP/1.1" 404 4587
 WARNING 2026-01-28 21:24:11,421 log Not Found: /favicon.ico
 WARNING 2026-01-28 21:24:11,422 basehttp "GET /favicon.ico HTTP/1.1" 404 4556
+ERROR 2026-01-28 22:03:18,120 log Internal Server Error: /sales/pos/table/3/pay/
+Traceback (most recent call last):
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\FAMI_APP\sales\views.py", line 439, in process_payment
+    'action_type': action_type,
+                   ^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'action_type' where it is not associated with a value
+ERROR 2026-01-28 22:03:18,126 basehttp "POST /sales/pos/table/3/pay/?action=pay_and_clear HTTP/1.1" 500 88231
