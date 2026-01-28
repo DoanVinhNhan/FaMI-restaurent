@@ -402,6 +402,9 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
              messages.error(request, "No active order to pay.")
         return redirect('sales:pos_index')
         
+    # Capture action intent (pay_and_clear, pay_only) early so preview flow has access
+    action_type = request.GET.get('action', 'pay_and_clear')
+
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method', 'CASH')
         promo_code = request.POST.get('promo_code', '').strip()
@@ -477,7 +480,6 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
              messages.error(request, f"Payment failed: {result['message']}")
              # Fallthrough to render form again
         
-    action_type = request.GET.get('action', 'pay_and_clear')
     return render(request, 'sales/payment_form.html', {
         'table': table, 
         'order': order,
