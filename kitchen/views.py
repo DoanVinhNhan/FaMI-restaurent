@@ -100,10 +100,15 @@ def kds_board_view(request: HttpRequest) -> HttpResponse:
         # Add item to the list
         target_dict[order_id]['items'].append(detail)
 
+    # 4. Check Low Stock (Task User Request)
+    from inventory.services import InventoryService
+    low_stock_items = InventoryService.get_low_stock_items()
+
     context = {
         'kitchen_tickets': list(kitchen_tickets.values()),
         'bar_tickets': list(bar_tickets.values()),
         'last_updated': timezone.now(),
+        'low_stock_items': low_stock_items,
     }
 
     # If the request is an HTMX polling request, return only the partial board
@@ -176,6 +181,30 @@ def undo_item_status(request: HttpRequest, detail_id: int) -> JsonResponse:
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
         logger.error(f"Error undoing status: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error undoing status: {str(e)}")
+        return JsonResponse({'error': 'Server error'}, status=500)
+
+@require_POST
+@login_required
+def mark_out_of_stock(request: HttpRequest, menu_item_id: int) -> HttpResponse:
+    """
+    Marks a Menu Item as OUT_OF_STOCK.
+    Returns the updated KDS Board (re-render) to reflect changes (or just alert).
+    """
+    try:
+        item = MenuItem.objects.get(pk=menu_item_id)
+        item.status = MenuItem.ItemStatus.OUT_OF_STOCK
+        item.save()
+        # Optionally notify user
+        # messages.warning(request, f"{item.name} is now Out of Stock.")
+        # But since this is HTMX, messages might not show easily without OOB swap.
+        # Just return the board.
+        return kds_board_view(request)
+    except MenuItem.DoesNotExist:
+        return JsonResponse({'error': 'Item not found'}, status=404)
+    except Exception as e:
+        logger.error(f"Error marking OOS: {e}")
         return JsonResponse({'error': 'Server error'}, status=500)
 
 
@@ -291,3 +320,35 @@ class WasteReportView(LoginRequiredMixin, View):
             'ingredients': ingredients
         }
         return render(request, self.template_name, context)
+
+@login_required
+def menu_management_view(request: HttpRequest) -> HttpResponse:
+    """
+    View for Kitchen to manage "Out of Stock" items globally.
+    """
+    # Simply list all active items grouped by category
+    items = MenuItem.objects.select_related('category').exclude(status=MenuItem.ItemStatus.INACTIVE).order_by('category__name', 'name')
+    
+    context = {
+        'menu_items': items,
+    }
+    return render(request, 'kitchen/menu_management.html', context)
+
+@require_POST
+@login_required
+def toggle_menu_item_stock(request: HttpRequest, item_id: int) -> HttpResponse:
+    """
+    Toggles the stock status of a menu item (ACTIVE <-> OUT_OF_STOCK).
+    Returns the updated button/row HTML (HTMX).
+    """
+    item = get_object_or_404(MenuItem, pk=item_id)
+    
+    if item.status == MenuItem.ItemStatus.OUT_OF_STOCK:
+        item.status = MenuItem.ItemStatus.ACTIVE
+    else:
+        item.status = MenuItem.ItemStatus.OUT_OF_STOCK
+    item.save()
+    
+    # Return just the updated row or button
+    # For simplicity, we can return the row partial
+    return render(request, 'kitchen/partials/menu_item_row.html', {'item': item})

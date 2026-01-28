@@ -23,6 +23,7 @@ urlpatterns = [
     path('pos/table/<int:table_id>/submit/', views.submit_order, name='pos_submit_order'),
     path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
     path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
+    path('pos/table/<int:table_id>/clear-status/', views.clear_table_status, name='clear_table_status'),
     
     # Promotion Management
     path('promotions/', views.PromotionListView.as_view(), name='promotion_list'),

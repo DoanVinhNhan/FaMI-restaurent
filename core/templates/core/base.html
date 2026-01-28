@@ -22,6 +22,82 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/sales/pos/">POS</a></li>
                 <li class="nav-item"><a class="nav-link" href="/kitchen/board/">Kitchen</a></li>
+
+                <!-- Menu Management -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        Menu
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'menu:menu_list' %}">Món ăn (Items)</a></li>
+                        <li><a class="dropdown-item" href="{% url 'menu:category_list' %}">Danh mục (Categories)</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Inventory Management -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="inventoryDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        Inventory
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'inventory:dashboard' %}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{% url 'inventory:ingredient_list' %}">Ingredients List</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'inventory:stock_take_list' %}">Stock Take</a></li>
+                    </ul>
+                </li>
+
+                <!-- Reporting -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        Báo cáo (Reports)
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'reporting:dashboard' %}">Tổng quan</a></li>
+                        <li><a class="dropdown-item" href="{% url 'reporting:sales_report' %}">Doanh thu</a></li>
+                        <li><a class="dropdown-item" href="{% url 'reporting:inventory_report' %}">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="{% url 'reporting:waste_report' %}">Hủy/Hỏng</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Admin / Settings (Right Aligned) -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <i class="bi bi-gear-fill"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <h6 class="dropdown-header">Cấu hình Bán hàng</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'sales:table_list' %}">Quản lý Bàn</a></li>
+                        <li><a class="dropdown-item" href="{% url 'sales:promotion_list' %}">Khuyến mãi</a></li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <h6 class="dropdown-header">Hệ thống</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'core:user_list' %}">Nhân viên</a></li>
+                        <li><a class="dropdown-item" href="{% url 'core:setting_list' %}">Cài đặt chung</a></li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'core:logout' %}">Đăng xuất</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>

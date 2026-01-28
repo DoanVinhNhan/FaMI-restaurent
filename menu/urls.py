@@ -19,4 +19,9 @@ urlpatterns = [
 
     # Recipe Management (UC: Manage Recipes)
     path('items/<int:pk>/recipe/', views.menu_recipe_view, name='recipe_manage'),
+
+    # Category Management (Task 001)
+    path('categories/', views.CategoryListView.as_view(), name='category_list'),
+    path('categories/create/', views.CategoryCreateView.as_view(), name='category_create'),
+    path('categories/<int:pk>/edit/', views.CategoryUpdateView.as_view(), name='category_edit'),
 ]

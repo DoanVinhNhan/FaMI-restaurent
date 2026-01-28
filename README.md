@@ -43,6 +43,15 @@ A comprehensive Point of Sale (POS) and Restaurant Management backend built with
     pip install -r requirements.txt
     ```
 
+3.a. **Configure Environment Variables**:
+    Create a file named `.env` in the `fami_backend` folder (next to `manage.py`) and add the following content:
+    ```env
+    DEBUG=True
+    SECRET_KEY=django-insecure-your-secret-key-here
+    ALLOWED_HOSTS=127.0.0.1,localhost
+    DATABASE_URL=sqlite:///db.sqlite3
+    ```
+
 4.  **Database Setup**:
     ```bash
     python manage.py migrate

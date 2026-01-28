@@ -58,6 +58,18 @@ class MenuItem(models.Model):
     
     image = models.ImageField(upload_to='menu_items/', blank=True, null=True, verbose_name=_("Product Image"))
     
+    # New Fields for Task 11
+    prep_time = models.PositiveIntegerField(
+        default=10,
+        verbose_name=_("Prep Time (mins)"),
+        help_text=_("Estimated time to prepare this dish.")
+    )
+    is_popular = models.BooleanField(
+        default=False,
+        verbose_name=_("Is Popular?"),
+        help_text=_("Highlight this item in the menu.")
+    )
+    
     status = models.CharField(
         max_length=20,
         choices=ItemStatus.choices,

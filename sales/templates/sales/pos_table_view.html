@@ -26,56 +26,64 @@
                 {% for item in menu_items %}
                 <div class="col-6 col-md-4 col-xl-3">
                     <!-- HTMX: Post to add item, swap the cart div -->
-                    <div class="card menu-item-card border-0 shadow-sm"
-                        hx-post="{% url 'sales:pos_add_item' table.table_id item.id %}" hx-target="#cart-container"
-                        hx-swap="innerHTML">
-
-                        {% if item.image %}
-                        <img src="{{ item.image.url }}" class="card-img-top object-fit-cover" height="120"
-                            alt="{{ item.name }}">
-                        {% else %}
-                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
-                            style="height: 120px;">
-                            <i class="bi bi-image"></i>
+                    {% if item.status == 'OUT_OF_STOCK' %}
+                    <div class="card menu-item-card border-0 shadow-sm opacity-50" style="pointer-events: none;">
+                        <div
+                            class="position-absolute top-50 start-50 translate-middle badge bg-danger fs-6 rounded-pill z-3">
+                            HẾT HÀNG
                         </div>
-                        {% endif %}
+                        {% else %}
+                        <div class="card menu-item-card border-0 shadow-sm"
+                            hx-post="{% url 'sales:pos_add_item' table.table_id item.id %}" hx-target="#cart-container"
+                            hx-swap="innerHTML">
+                            {% endif %}
 
-                        <div class="card-body p-2 text-center">
-                            <h6 class="card-title mb-1 text-truncate">{{ item.name }}</h6>
-                            <p class="card-text fw-bold text-primary mb-0">
-                                {% if item.get_current_price %}
-                                ${{ item.get_current_price.selling_price }}
-                                {% else %}
-                                <small class="text-danger">N/A</small>
-                                {% endif %}
-                            </p>
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top object-fit-cover" height="120"
+                                alt="{{ item.name }}">
+                            {% else %}
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                                style="height: 120px;">
+                                <i class="bi bi-image"></i>
+                            </div>
+                            {% endif %}
+
+                            <div class="card-body p-2 text-center">
+                                <h6 class="card-title mb-1 text-truncate">{{ item.name }}</h6>
+                                <p class="card-text fw-bold text-primary mb-0">
+                                    {% if item.get_current_price %}
+                                    ${{ item.get_current_price.selling_price }}
+                                    {% else %}
+                                    <small class="text-danger">N/A</small>
+                                    {% endif %}
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">Không có món nào trong danh mục này.</p>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="col-12 text-center py-5">
-                    <p class="text-muted">Không có món nào trong danh mục này.</p>
+            </div>
+        </div>
+
+        <!-- RIGHT: CART AREA -->
+        <div class="col-lg-4 h-100 ps-3">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-cart3 me-2"></i>Đơn hàng</h5>
+                        <span class="badge bg-primary fs-6">{{ table.table_name }}</span>
+                    </div>
                 </div>
-                {% endfor %}
+
+                <!-- Dynamic Cart Content -->
+                <div id="cart-container" class="d-flex flex-column h-100">
+                    {% include "sales/partials/cart_detail.html" %}
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- RIGHT: CART AREA -->
-    <div class="col-lg-4 h-100 ps-3">
-        <div class="card h-100 shadow border-0">
-            <div class="card-header bg-white border-bottom py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="bi bi-cart3 me-2"></i>Đơn hàng</h5>
-                    <span class="badge bg-primary fs-6">{{ table.table_name }}</span>
-                </div>
-            </div>
-
-            <!-- Dynamic Cart Content -->
-            <div id="cart-container" class="d-flex flex-column h-100">
-                {% include "sales/partials/cart_detail.html" %}
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    {% endblock %}

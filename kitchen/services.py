@@ -43,6 +43,20 @@ class KitchenController:
         item.status = new_status
         item.save()
 
+        # --- Inventory Deduction (User Request) ---
+        print(f"DEBUG: Status Change Item {item.id}: {old_status} -> {new_status}")
+        
+        if new_status == StatusHistory.OrderStatus.COOKING and old_status == StatusHistory.OrderStatus.PENDING:
+            print("DEBUG: Triggering Inventory Deduction...")
+            try:
+                from inventory.services import InventoryService
+                InventoryService.deduct_ingredients_for_item(item)
+            except Exception as e:
+                # Log but don't crash the KDS flow? Or raise?
+                # Ideally we want to know if deduction failed.
+                print(f"ERROR: Inventory deduction failed for item {item.id}: {e}")
+        # ------------------------------------------
+
         # 3. Log History
         StatusHistory.objects.create(
             order_detail=item,

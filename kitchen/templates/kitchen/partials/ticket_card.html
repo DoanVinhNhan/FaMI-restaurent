@@ -1,7 +1,10 @@
 <div class="card shadow-sm" style="width: 100%; max-width: 350px;">
     <div
         class="card-header d-flex justify-content-between align-items-center {% if station == 'Kitchen' %}bg-warning{% else %}bg-info{% endif %} bg-opacity-25">
-        <strong>Order #{{ ticket.order.id }}</strong>
+        <div>
+            <strong>#{{ ticket.order.id }}</strong>
+            <span class="badge bg-dark ms-1">{{ ticket.order.table.table_name }}</span>
+        </div>
         <small>{{ ticket.order.created_at|timesince }} ago</small>
     </div>
     <div class="card-body p-0">
@@ -9,10 +12,30 @@
             {% for item in ticket.items %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <span class="badge bg-secondary rounded-pill me-2">{{ item.quantity }}x</span>
-                    <strong>{{ item.menu_item.name }}</strong>
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="badge bg-secondary rounded-pill me-2">{{ item.quantity }}x</span>
+                        <strong class="me-2">{{ item.menu_item.name }}</strong>
+
+                        <!-- Recipe Popover Trigger -->
+                        <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none"
+                            data-bs-toggle="popover" title="Công thức: {{ item.menu_item.name }}"
+                            data-bs-content="{{ item.menu_item.recipe.instructions|default:'Chưa có công thức' }}">
+                            <i class="bi bi-journal-text text-info"></i>
+                        </button>
+                    </div>
+
                     {% if item.note %}
                     <div class="text-danger small fst-italic">Note: {{ item.note }}</div>
+                    {% endif %}
+
+                    <!-- Recipe Ingredients (Inline Check) - Optional per user request "công thức nguyên liệu" -->
+                    <!-- We can show ingredients in a small block if recipe exists -->
+                    {% if item.menu_item.recipe %}
+                    <div class="small text-muted mt-1" style="font-size: 0.75rem;">
+                        {% for ing in item.menu_item.recipe.ingredients.all %}
+                        {{ ing.ingredient.name }}: {{ ing.quantity }} {{ ing.unit }}{% if not forloop.last %}, {%endif%}
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 
@@ -24,6 +47,15 @@
                         hx-target="#kds-board-container" hx-swap="innerHTML">
                         Cook
                     </button>
+
+                    <!-- Out of Stock Action -->
+                    <button class="btn btn-sm btn-outline-dark"
+                        hx-post="{% url 'kitchen:mark_out_of_stock' item.menu_item.id %}"
+                        hx-confirm="Đánh dấu món này là HẾT HÀNG? (Sẽ chặn gọi món mới)"
+                        hx-target="#kds-board-container" hx-swap="innerHTML" title="Báo hết hàng">
+                        <i class="bi bi-slash-circle"></i>
+                    </button>
+
                     <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'kitchen:cancel_item' item.id %}"
                         hx-prompt="Reason for cancellation?" hx-vals='{"reason": prompt_value}'
                         hx-target="#kds-board-container" hx-swap="innerHTML">

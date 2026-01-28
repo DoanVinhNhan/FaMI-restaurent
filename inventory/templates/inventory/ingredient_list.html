@@ -40,19 +40,31 @@
                         <th>Tên Nguyên liệu</th>
                         <th>Đơn vị</th>
                         <th>Giá vốn / ĐV</th>
-                        <th class="text-center">Cảnh báo tồn kho</th>
+                        <th class="text-center">Tồn Kho</th>
+                        <th class="text-center">Cảnh báo</th>
                         <th class="text-end pe-4">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ingredient in ingredients %}
-                    <tr>
+                    <tr class="{% if ingredient.inventory_stock.is_low_stock %}table-warning{% endif %}">
                         <td class="ps-4 fw-bold text-primary">{{ ingredient.sku }}</td>
                         <td>{{ ingredient.name }}</td>
                         <td><span class="badge bg-info text-dark">{{ ingredient.unit }}</span></td>
                         <td>{{ ingredient.cost_per_unit }} ₫</td>
+                        <td class="text-center fw-bold">
+                            {{ ingredient.inventory_stock.quantity_on_hand|default:"0" }}
+                        </td>
                         <td class="text-center">{{ ingredient.alert_threshold }}</td>
                         <td class="text-end pe-4">
+                            <!-- Stock In/Out Action -->
+                            {% if ingredient.inventory_stock %}
+                            <a href="{% url 'inventory:adjust_stock' ingredient.inventory_stock.pk %}"
+                                class="btn btn-sm btn-success me-2" title="Nhập/Xuất Kho">
+                                <i class="fas fa-boxes me-1"></i> Nhập/Xuất
+                            </a>
+                            {% endif %}
+
                             <a href="{% url 'inventory:ingredient_edit' ingredient.pk %}"
                                 class="btn btn-sm btn-outline-primary me-1" title="Chỉnh sửa">
                                 <i class="fas fa-edit"></i>

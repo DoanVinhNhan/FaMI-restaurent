@@ -117,28 +117,46 @@ def inventory_dashboard(request):
 @login_required
 def adjust_stock(request, pk):
     """
-    Manually adjust stock level for an item.
+    Manually adjust stock level for an item (Stock In / Stock Out).
     """
     item = get_object_or_404(InventoryItem, pk=pk)
     
     if request.method == 'POST':
         try:
-            new_qty = float(request.POST.get('quantity'))
+            qty_input = float(request.POST.get('quantity'))
+            adjustment_type = request.POST.get('adjustment_type') # 'ADD', 'SUBTRACT', 'SET'
             reason = request.POST.get('reason')
             
+            old_qty = float(item.quantity_on_hand)
+            quantity_change = 0.0
+            
+            if adjustment_type == 'ADD':
+                quantity_change = qty_input
+                new_qty = old_qty + qty_input
+            elif adjustment_type == 'SUBTRACT':
+                quantity_change = -qty_input
+                new_qty = old_qty - qty_input
+            else: # SET
+                quantity_change = qty_input - old_qty
+                new_qty = qty_input
+
+            if new_qty < 0:
+                messages.error(request, "Cannot reduce stock below 0.")
+                return render(request, 'inventory/adjust_stock.html', {'item': item})
+
             # Create Log
             InventoryLog.objects.create(
                 ingredient=item.ingredient,
                 user=request.user,
-                change_type='ADJUSTMENT',
-                quantity_change=new_qty - float(item.quantity_on_hand),
+                change_type=adjustment_type,
+                quantity_change=quantity_change,
                 reason=reason
             )
             
             # Update Item
             item.quantity_on_hand = new_qty
             item.save()
-            messages.success(request, f"Stock updated for {item.ingredient.name}")
+            messages.success(request, f"Stock updated for {item.ingredient.name}: {old_qty} -> {new_qty}")
             return redirect('inventory:dashboard')
         except ValueError:
             messages.error(request, "Invalid quantity")

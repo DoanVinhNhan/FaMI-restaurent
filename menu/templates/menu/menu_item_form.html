@@ -45,6 +45,21 @@
                                 {{ item_form.status }}
                                 <div class="text-danger small">{{ item_form.status.errors }}</div>
                             </div>
+
+                            <!-- New Fields -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Thời gian chuẩn bị (phút)</label>
+                                {{ item_form.prep_time }}
+                                <div class="text-danger small">{{ item_form.prep_time.errors }}</div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center mt-4">
+                                <div class="form-check form-switch fs-5">
+                                    {{ item_form.is_popular }}
+                                    <label class="form-check-label" for="{{ item_form.is_popular.id_for_label }}">Món
+                                        nổi bật?</label>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <label class="form-label fw-bold">Mô tả</label>
                                 {{ item_form.description }}

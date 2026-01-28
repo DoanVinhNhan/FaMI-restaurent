@@ -1,7 +1,36 @@
 <div class="card-body cart-scroll p-0">
-    {% if current_order and current_order.details.exists %}
+    <!-- 1. History (Submitted Orders) -->
+    {% if active_orders %}
+    <div class="bg-light border-bottom p-2">
+        <small class="fw-bold text-uppercase text-muted"><i class="bi bi-clock-history me-1"></i>Đã gọi (Chưa thanh
+            toán)</small>
+    </div>
+    <div class="list-group list-group-flush mb-0 border-bottom">
+        {% for order in active_orders %}
+        {% for detail in order.details.all %}
+        <div class="list-group-item bg-light px-3 py-2 d-flex justify-content-between align-items-center opacity-75">
+            <div class="me-auto">
+                <div class="fw-bold">{{ detail.menu_item.name }}</div>
+                <small class="text-muted">{{ detail.quantity }} x ${{ detail.unit_price }}</small>
+            </div>
+            <div class="text-end">
+                <span class="fw-bold d-block">${{ detail.total_price }}</span>
+                <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">{{ order.get_status_display
+                    }}</span>
+            </div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 2. Current Cart (Pending) -->
+    {% if pending_order and pending_order.details.exists %}
+    <div class="bg-white p-2 border-bottom">
+        <small class="fw-bold text-uppercase text-primary"><i class="bi bi-cart me-1"></i>Đang chọn</small>
+    </div>
     <div class="list-group list-group-flush">
-        {% for detail in current_order.details.all %}
+        {% for detail in pending_order.details.all %}
         <div class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">
             <div class="me-auto">
                 <div class="fw-bold">{{ detail.menu_item.name }}</div>
@@ -18,8 +47,8 @@
         </div>
         {% endfor %}
     </div>
-    {% else %}
-    <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+    {% elif not active_orders %}
+    <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted py-5">
         <i class="bi bi-basket display-1 mb-3 opacity-25"></i>
         <p>Giỏ hàng trống</p>
     </div>
@@ -28,41 +57,64 @@
 
 <!-- Footer / Totals -->
 <div class="card-footer bg-white border-top p-3">
+    <!-- Calculate Grand Total -->
     <div class="d-flex justify-content-between mb-3">
-        <span class="fs-5 text-secondary">Tổng cộng</span>
+        <span class="fs-5 text-secondary">Tạm tính</span>
         <span class="fs-4 fw-bold text-dark">
-            {% if current_order %}${{ current_order.total_amount }}{% else %}$0.00{% endif %}
+            <!-- Simple template math not easy, best to do in view. But for now let's show breakdown or just Pending Total? -->
+            <!-- User Requirement: "Chỉ mất đi khi thanh toán". Total should probably be the Table Total. -->
+            <!-- Let's sum in template or view. View is cleaner. But I can't easily change context in all views now. -->
+            <!-- Let's show Pending Total for now, and maybe a Table Total line if history exists. -->
+            {% if pending_order %}${{ pending_order.total_amount }}{% else %}$0.00{% endif %}
         </span>
     </div>
 
+    {% if active_orders %}
+    <div class="d-flex justify-content-between mb-2 small text-muted">
+        <span>Đã gọi:</span>
+        <span>(See Payment)</span>
+        <!-- Ideally we sum active_orders.total_amount. -->
+    </div>
+    {% endif %}
+
     <div class="d-grid gap-2">
-        {% if current_order and current_order.details.exists %}
+        {% if pending_order and pending_order.details.exists %}
         <form action="{% url 'sales:pos_submit_order' table.table_id %}" method="POST">
             {% csrf_token %}
-
-            {% if current_order.status == 'Cooking' %}
-            <div class="alert alert-warning py-2 mb-2 text-center">
-                <small><i class="bi bi-fire me-1"></i>Đang chế biến</small>
-            </div>
-            <!-- Pay Button -->
-            <a href="{% url 'sales:process_payment' table.table_id %}" class="btn btn-primary btn-lg w-100">
-                <i class="bi bi-credit-card me-2"></i>Thanh toán
-            </a>
-
-            {% else %}
             <!-- Submit Button (Pending) -->
             <button type="submit" class="btn btn-success btn-lg w-100">
                 Gửi xuống Bếp <i class="bi bi-arrow-right ms-2"></i>
             </button>
-            {% endif %}
         </form>
-        {% else %}
-        <button class="btn btn-secondary btn-lg w-100" disabled>
-            Đơn trống
-        </button>
         {% endif %}
 
-        <a href="{% url 'sales:pos_index' %}" class="btn btn-outline-secondary">
+        <!-- Payment Actions -->
+        <!-- Only show if there are Active Orders (Kitchen) -->
+        {% if active_orders %}
+        <div class="btn-group-vertical w-100 gap-2">
+            <!-- 1. Pay & Mark Empty (Standard Flow) -->
+            <a href="{% url 'sales:process_payment' table.table_id %}?action=pay_and_clear"
+                class="btn btn-primary btn-lg">
+                <i class="bi bi-check-circle-fill me-2"></i>Thanh toán & Trống Bàn
+            </a>
+
+            <!-- 2. Pay Only -->
+            <a href="{% url 'sales:process_payment' table.table_id %}?action=pay_only" class="btn btn-outline-primary">
+                <i class="bi bi-credit-card me-2"></i>Chỉ Thanh toán
+            </a>
+
+            <!-- 3. Mark Empty Only (No Payment/Cleanup) -->
+            <form action="{% url 'sales:clear_table_status' table.table_id %}" method="POST" class="w-100"
+                onsubmit="return confirm('Bạn có chắc chắn muốn đánh dấu bàn này là TRỐNG mà KHÔNG thanh toán?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-eraser me-2"></i>Chỉ Đánh dấu Trống
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'sales:pos_index' %}" class="btn btn-outline-secondary mt-2">
             Quay lại
         </a>
     </div>

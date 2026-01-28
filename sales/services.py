@@ -175,12 +175,15 @@ class PaymentController:
         order.save()
         
         # 8. Deduct Inventory
-        from inventory.services import InventoryService
-        try:
-            InventoryService.deduct_for_order(order)
-        except Exception as e:
-            # Log error but don't fail payment
-            print(f"Inventory deduction failed: {e}")
+        # Note: Inventory is deducted when Order is submitted to Kitchen (Status=Cooking).
+        # We only deduct here if it wasn't deducted yet, but current view logic enforces Cooking status first.
+        # Removing to prevent double deduction and fix AttributeError.
+        # from inventory.services import InventoryService
+        # try:
+        #     if order.status == Order.Status.PENDING: # Should not happen with current strict view filtering
+        #          InventoryService.deduct_ingredients_for_order(order)
+        # except Exception as e:
+        #     print(f"Inventory deduction failed: {e}")
 
         # 9. Print Receipt
         PaymentController.print_receipt(order, tx.pk)

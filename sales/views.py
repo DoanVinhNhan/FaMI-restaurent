@@ -129,19 +129,24 @@ def pos_table_detail(request: HttpRequest, table_id: int) -> HttpResponse:
     else:
         menu_items = MenuItem.objects.filter(status='ACTIVE')
 
-    # Get or create a PENDING order for this table
-    # We do not create it yet, just try to fetch it. Creation happens on adding items.
-    # Get PENDING or COOKING order (Active)
-    current_order = Order.objects.filter(
+    # Get ALL active orders for history display (Cooking/Served)
+    active_orders = Order.objects.filter(
         table=table, 
-        status__in=[Order.Status.PENDING, Order.Status.COOKING]
-    ).order_by('-created_at').first()
+        status__in=[Order.Status.COOKING, Order.Status.SERVED, Order.Status.READY]
+    ).order_by('-created_at')
+
+    # Get the specific PENDING order for the Cart (Editable)
+    pending_order = Order.objects.filter(
+        table=table, 
+        status=Order.Status.PENDING
+    ).first()
 
     context = {
         'table': table,
         'categories': categories,
         'menu_items': menu_items,
-        'current_order': current_order,
+        'pending_order': pending_order, # The cart
+        'active_orders': active_orders, # The history
         'selected_cat': int(cat_id) if cat_id else None
     }
     return render(request, 'sales/pos_table_view.html', context)
@@ -158,6 +163,10 @@ def add_to_cart(request: HttpRequest, table_id: int, item_id: int) -> HttpRespon
     
     if request.method == 'GET':
         return HttpResponse("Method GET allowed for verification. Use POST to perform action.")
+        
+    # Check for Out of Stock
+    if menu_item.status == MenuItem.ItemStatus.OUT_OF_STOCK:
+        return HttpResponseBadRequest("Item is Out of Stock")
 
     with transaction.atomic():
         # 1. Get or Create Order
@@ -203,8 +212,19 @@ def add_to_cart(request: HttpRequest, table_id: int, item_id: int) -> HttpRespon
         order.update_total() 
         # Order.update_total() handles summing up details
 
+    # Fetch History for context
+    active_orders = Order.objects.filter(
+        table=table, 
+        status__in=[Order.Status.COOKING, Order.Status.SERVED, Order.Status.READY]
+    ).order_by('-created_at')
+
     # Return only the cart partial
-    context = {'current_order': order, 'table': table}
+    # Unify variable name: 'pending_order' for the one being edited
+    context = {
+        'pending_order': order, 
+        'table': table,
+        'active_orders': active_orders
+    }
     return render(request, 'sales/partials/cart_detail.html', context)
 
 @login_required
@@ -231,7 +251,16 @@ def remove_from_cart(request: HttpRequest, table_id: int, detail_id: int) -> Htt
         # Recalculate Total
         order.update_total()
 
-    context = {'current_order': order, 'table': table}
+    active_orders = Order.objects.filter(
+        table=table, 
+        status__in=[Order.Status.COOKING, Order.Status.SERVED, Order.Status.READY]
+    ).order_by('-created_at')
+
+    context = {
+        'pending_order': order, 
+        'table': table,
+        'active_orders': active_orders
+    }
     return render(request, 'sales/partials/cart_detail.html', context)
 
 @login_required
@@ -273,15 +302,14 @@ def submit_order(request: HttpRequest, table_id: int) -> HttpResponse:
     order.status = Order.Status.COOKING
     order.save()
     
+    # Change status to trigger Kitchen display
+    # Also notify Kitchen (Task 030 features can be hooked here)
+    order.status = Order.Status.COOKING
+    order.save()
+    
     # --- Auto Deduct Inventory (Task 022) ---
-    try:
-        from inventory.services import InventoryService
-        InventoryService.deduct_ingredients_for_order(order)
-    except Exception as e:
-        logger.error(f"Inventory deduction failed: {e}")
-        # We don't rollback the order status change, but we log the error.
-        # Ideally this should be in the same transaction block if creating Order Service.
-        messages.warning(request, f"Order sent to kitchen, but inventory update failed: {e}")
+    # MOVED TO KitchenController.update_item_status (Per User Request)
+    # Deduction now happens when Kitchen marks item as "Cooking".
 
     # Push Notification
     try:
@@ -412,16 +440,46 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
                  
              messages.success(request, msg)
              
-             # Free the table
-             table.status = RestaurantTable.TableStatus.AVAILABLE
-             table.save()
+             # Check action param from session or hidden input if we want to support both flows
+             # But here we are in POST steps.
+             # Wait, the Link sets the GET param, but the Form submit POSTs. 
+             # We need to capture the intent.
+             # Simplest way: Look at the Referer or if we passed it in the form.
+             # Let's assume default is Clear Table unless specified?
+             # Or we can check if there's a hidden field 'clear_table' in the payment form.
+             
+             should_clear = True
+             if request.POST.get('clear_table') == 'false':
+                 should_clear = False
+             
+             if should_clear:
+                 table.status = RestaurantTable.TableStatus.AVAILABLE
+                 table.save()
              
              return redirect('sales:pos_index')
         else:
              messages.error(request, f"Payment failed: {result['message']}")
              # Fallthrough to render form again
         
-    return render(request, 'sales/payment_form.html', {'table': table, 'order': order})
+    action_type = request.GET.get('action', 'pay_and_clear')
+    return render(request, 'sales/payment_form.html', {
+        'table': table, 
+        'order': order,
+        'action_type': action_type
+    })
+
+@login_required
+@require_POST
+def clear_table_status(request: HttpRequest, table_id: int) -> HttpResponse:
+    """
+    Manually clears the table status to AVAILABLE.
+    Useful for fixing stuck states.
+    """
+    table = get_object_or_404(RestaurantTable, pk=table_id)
+    table.status = RestaurantTable.TableStatus.AVAILABLE
+    table.save()
+    messages.success(request, f"Table {table.table_name} marked as Empty.")
+    return redirect('sales:pos_index')
 
 
 # --- Promotion Management Views (Task 020) ---

@@ -17,7 +17,7 @@
 
                         <h5 class="mb-3 text-secondary border-bottom pb-2">Thông tin chi tiết</h5>
 
-                        {% if form.errors %}
+                        {% if item_form.errors %}
                         <div class="alert alert-danger">
                             Vui lòng kiểm tra lại thông tin nhập.
                         </div>
@@ -26,28 +26,44 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Mã SKU</label>
-                                {{ form.sku }}
-                                <div class="text-danger small">{{ form.sku.errors }}</div>
+                                <!-- Render SKU as Readonly. We render the widget with readonly attribute manually or just use HTML -->
+                                <input type="text" name="sku" value="{{ item_form.instance.sku }}" class="form-control"
+                                    readonly>
+                                <div class="text-danger small">{{ item_form.sku.errors }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Tên Món</label>
-                                {{ form.name }}
-                                <div class="text-danger small">{{ form.name.errors }}</div>
+                                {{ item_form.name }}
+                                <div class="text-danger small">{{ item_form.name.errors }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Danh mục</label>
-                                {{ form.category }}
-                                <div class="text-danger small">{{ form.category.errors }}</div>
+                                {{ item_form.category }}
+                                <div class="text-danger small">{{ item_form.category.errors }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Trạng thái</label>
-                                {{ form.status }}
-                                <div class="text-danger small">{{ form.status.errors }}</div>
+                                {{ item_form.status }}
+                                <div class="text-danger small">{{ item_form.status.errors }}</div>
                             </div>
+                            <!-- New Fields -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Thời gian chuẩn bị (phút)</label>
+                                {{ item_form.prep_time }}
+                                <div class="text-danger small">{{ item_form.prep_time.errors }}</div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center mt-4">
+                                <div class="form-check form-switch fs-5">
+                                    {{ item_form.is_popular }}
+                                    <label class="form-check-label" for="{{ item_form.is_popular.id_for_label }}">Món
+                                        nổi bật?</label>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <label class="form-label fw-bold">Mô tả</label>
-                                {{ form.description }}
-                                <div class="text-danger small">{{ form.description.errors }}</div>
+                                {{ item_form.description }}
+                                <div class="text-danger small">{{ item_form.description.errors }}</div>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Hình ảnh hiện tại</label>
@@ -59,8 +75,8 @@
                                 {% else %}
                                 <p class="text-muted fst-italic">Chưa có hình ảnh</p>
                                 {% endif %}
-                                {{ form.image }}
-                                <div class="text-danger small">{{ form.image.errors }}</div>
+                                {{ item_form.image }}
+                                <div class="text-danger small">{{ item_form.image.errors }}</div>
                             </div>
                         </div>
 

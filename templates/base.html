@@ -125,14 +125,30 @@
                 <!-- Inventory: Manager or Inventory Admin -->
                 {% if user.is_manager or user.is_inventory_manager or user.is_superuser %}
                 <li>
-                    <a href="{% url 'inventory:ingredient_list' %}"><i class="fas fa-boxes me-2"></i>Kho (Inventory)</a>
+                    <a href="#inventorySubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-boxes me-2"></i>Kho (Inventory)
+                    </a>
+                    <ul class="collapse list-unstyled ps-4" id="inventorySubmenu">
+                        <li><a href="{% url 'inventory:dashboard' %}">Tổng quan</a></li>
+                        <li><a href="{% url 'inventory:ingredient_list' %}">Nguyên liệu (Nhập/Xuất)</a></li>
+                        <li><a href="{% url 'inventory:stock_take_list' %}">Kiểm kê (Stock Take)</a></li>
+                    </ul>
                 </li>
                 {% endif %}
 
                 <!-- Sales: Manager or Cashier -->
                 {% if user.is_manager or user.role == 'CASHIER' or user.is_superuser %}
                 <li>
-                    <a href="{% url 'sales:pos_index' %}"><i class="fas fa-cash-register me-2"></i>Bán hàng (Sales)</a>
+                    <a href="#salesSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-cash-register me-2"></i>Bán hàng (Sales)
+                    </a>
+                    <ul class="collapse list-unstyled ps-4" id="salesSubmenu">
+                        <li><a href="{% url 'sales:pos_index' %}">POS Bán hàng</a></li>
+                        {% if user.is_manager or user.is_superuser %}
+                        <li><a href="{% url 'sales:table_list' %}">Quản lý Bàn</a></li>
+                        <li><a href="{% url 'sales:promotion_list' %}">Khuyến mãi</a></li>
+                        {% endif %}
+                    </ul>
                 </li>
                 {% endif %}
 
@@ -146,18 +162,28 @@
                 <!-- Reporting: Manager or Inventory Admin -->
                 {% if user.is_manager or user.is_inventory_manager or user.is_superuser %}
                 <li>
-                    <a href="{% url 'reporting:dashboard' %}"><i class="fas fa-chart-line me-2"></i>Báo cáo</a>
+                    <a href="#reportsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-chart-line me-2"></i>Báo cáo
+                    </a>
+                    <ul class="collapse list-unstyled ps-4" id="reportsSubmenu">
+                        <li><a href="{% url 'reporting:dashboard' %}">Tổng quan</a></li>
+                        <li><a href="{% url 'reporting:sales_report' %}">Doanh thu</a></li>
+                        <li><a href="{% url 'reporting:inventory_report' %}">Tồn kho</a></li>
+                        <li><a href="{% url 'reporting:waste_report' %}">Hủy/Hỏng</a></li>
+                    </ul>
                 </li>
                 {% endif %}
 
-                <!-- HR: Manager only -->
+                <!-- Account Settings: Manager only -->
                 {% if user.is_manager or user.is_superuser %}
                 <li>
-                    <a href="{% url 'core:user_list' %}"><i class="fas fa-users me-2"></i>Nhân sự (HR)</a>
-                </li>
-                <!-- Settings: Manager only -->
-                <li>
-                    <a href="{% url 'core:setting_list' %}"><i class="fas fa-cogs me-2"></i>Hệ thống</a>
+                    <a href="#adminSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-cogs me-2"></i>Admin
+                    </a>
+                    <ul class="collapse list-unstyled ps-4" id="adminSubmenu">
+                        <li><a href="{% url 'core:user_list' %}">Nhân viên</a></li>
+                        <li><a href="{% url 'core:setting_list' %}">Cài đặt chung</a></li>
+                    </ul>
                 </li>
                 {% endif %}
             </ul>

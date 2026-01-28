@@ -5,11 +5,12 @@ from .models import User
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'role', 'employee_code', 'first_name', 'last_name')
+        fields = ('username', 'password', 'email', 'role', 'employee_code', 'first_name', 'last_name')
         widgets = {
             'role': forms.Select(attrs={'class': 'form-select'}),
             'employee_code': forms.TextInput(attrs={'class': 'form-control'}),
             'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),

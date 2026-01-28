@@ -9,13 +9,15 @@ class MenuItemForm(forms.ModelForm):
     """
     class Meta:
         model = MenuItem
-        fields = ['sku', 'name', 'category', 'description', 'image', 'status']
+        fields = ['sku', 'name', 'category', 'description', 'image', 'prep_time', 'is_popular', 'status']
         widgets = {
             'sku': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter SKU'}),
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dish Name'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'prep_time': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_popular': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
 

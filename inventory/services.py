@@ -103,7 +103,7 @@ class WasteService:
 
 class InventoryService:
     @staticmethod
-    def deduct_for_order(order):
+    def deduct_ingredients_for_order(order):
         """
         Deducts inventory based on the items in the paid order.
         Assumes BOM/Recipe logic.
@@ -113,6 +113,7 @@ class InventoryService:
         
         # Prefetch to minimize queries
         details = OrderDetail.objects.filter(order=order).select_related('menu_item', 'menu_item__recipe')
+        print(f"DEBUG: Deducting Inventory for Order #{order.id} with {details.count()} items.")
         
         for detail in details:
             menu_item = detail.menu_item
@@ -160,5 +161,48 @@ class InventoryService:
                 return False
                 
         return True
+
+    @staticmethod
+    def deduct_ingredients_for_item(order_detail):
+        """
+        Deducts inventory for a single OrderDetail item.
+        Used when Kitchen starts cooking a specific dish.
+        """
+        menu_item = order_detail.menu_item
+        print(f"DEBUG: Attempting deduction for {menu_item.name} (ID: {menu_item.id})")
+        
+        try:
+            recipe = menu_item.recipe
+        except Exception as e:
+            print(f"DEBUG: No recipe found for {menu_item.name}. Skipping deduction. Error: {e}")
+            return
+
+        qty_decimal = Decimal(order_detail.quantity)
+        print(f"DEBUG: Found recipe {recipe.id}. Deducting for Qty: {qty_decimal}")
+
+        for component in recipe.ingredients.all():
+            total_needed = qty_decimal * component.quantity
+            
+            inv_item, _ = InventoryItem.objects.get_or_create(ingredient=component.ingredient)
+            inv_item.quantity_on_hand -= total_needed
+            inv_item.save()
+            print(f"DEBUG: Deducted {total_needed} {component.unit} of {component.ingredient.name} (New Level: {inv_item.quantity_on_hand})")
+
+    @staticmethod
+    def get_low_stock_items():
+        """
+        Returns a list of InventoryItems that are below their ingredient's alert threshold.
+        """
+        # Efficient query using F expressions if needed, or python loop given scale
+        # We need InventoryItems where quantity_on_hand <= ingredient.alert_threshold
+        # And threshold > 0 (to avoid alerts for items we don't track or have 0 threshold)
+        
+        from django.db.models import F
+        
+        low_stock = InventoryItem.objects.select_related('ingredient').filter(
+            ingredient__alert_threshold__gt=0,
+            quantity_on_hand__lte=F('ingredient__alert_threshold')
+        )
+        return low_stock
 
 

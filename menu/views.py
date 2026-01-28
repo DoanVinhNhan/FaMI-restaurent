@@ -4,6 +4,7 @@ from django.views.generic import ListView, UpdateView, DetailView
 from django.db import transaction
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -245,3 +246,39 @@ def menu_recipe_view(request: HttpRequest, pk: int) -> HttpResponse:
         'title': f'Recipe: {menu_item.name}'
     }
     return render(request, 'menu/recipe_form.html', context)
+
+# --- Category Management Views (Task 001) ---
+from .models import Category
+from django.views.generic import CreateView
+
+class CategoryListView(RoleRequiredMixin, ListView):
+    allowed_roles = ['MANAGER', 'ADMIN']
+    model = Category
+    template_name = 'menu/category_list.html'
+    context_object_name = 'categories'
+
+class CategoryCreateView(RoleRequiredMixin, SuccessMessageMixin, CreateView):
+    allowed_roles = ['MANAGER', 'ADMIN']
+    model = Category
+    fields = ['name', 'description', 'printer_target', 'is_active']
+    template_name = 'menu/category_form.html'
+    success_url = reverse_lazy('menu:category_list')
+    success_message = "Category created successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create New Category"
+        return context
+
+class CategoryUpdateView(RoleRequiredMixin, SuccessMessageMixin, UpdateView):
+    allowed_roles = ['MANAGER', 'ADMIN']
+    model = Category
+    fields = ['name', 'description', 'printer_target', 'is_active']
+    template_name = 'menu/category_form.html'
+    success_url = reverse_lazy('menu:category_list')
+    success_message = "Category updated successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Update Category"
+        return context

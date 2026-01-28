@@ -19,6 +19,9 @@
 
                     <form method="post" id="paymentForm">
                         {% csrf_token %}
+                        <!-- Hidden field to control table clearing behavior -->
+                        <input type="hidden" name="clear_table"
+                            value="{% if action_type == 'pay_only' %}false{% else %}true{% endif %}">
 
                         <!-- Payment Method -->
                         <div class="mb-4">

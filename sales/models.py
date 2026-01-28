@@ -161,12 +161,12 @@ class Order(models.Model):
     """
 
     class Status(models.TextChoices):
-        PENDING = 'Pending', _('Pending')       # Order created
-        COOKING = 'Cooking', _('Cooking')       # Sent to kitchen
-        READY = 'Ready', _('Ready')             # Ready to serve
-        SERVED = 'Served', _('Served')          # Served to customer
-        PAID = 'Paid', _('Paid')                # Payment completed
-        CANCELLED = 'Cancelled', _('Cancelled') # Order voided
+        PENDING = 'Pending', _('Đang chọn (Pending)')       # Order created
+        COOKING = 'Cooking', _('Đang chế biến')       # Sent to kitchen
+        READY = 'Ready', _('Sẵn sàng')             # Ready to serve
+        SERVED = 'Served', _('Đã phục vụ')          # Served to customer
+        PAID = 'Paid', _('Đã thanh toán')                # Payment completed
+        CANCELLED = 'Cancelled', _('Đã hủy') # Order voided
 
     # External ID for Idempotency
     external_id = models.CharField(
