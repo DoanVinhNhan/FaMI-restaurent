@@ -109,28 +109,57 @@
             </div>
 
             <ul class="list-unstyled components">
+                {% if user.is_manager or user.is_inventory_manager or user.is_superuser %}
                 <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
                     <a href="{% url 'core:dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                 </li>
-                <!-- Functional Modules -->
+                {% endif %}
+
+                <!-- Menu: Manager only (Edit) -->
+                {% if user.is_manager or user.is_superuser %}
                 <li>
-                <a href="{% url 'menu:menu_list' %}"><i class="fas fa-book-open me-2"></i>Menu</a>
-            </li>
+                    <a href="{% url 'menu:menu_list' %}"><i class="fas fa-book-open me-2"></i>Menu</a>
+                </li>
+                {% endif %}
+
+                <!-- Inventory: Manager or Inventory Admin -->
+                {% if user.is_manager or user.is_inventory_manager or user.is_superuser %}
                 <li>
                     <a href="{% url 'inventory:ingredient_list' %}"><i class="fas fa-boxes me-2"></i>Kho (Inventory)</a>
                 </li>
+                {% endif %}
+
+                <!-- Sales: Manager or Cashier -->
+                {% if user.is_manager or user.role == 'CASHIER' or user.is_superuser %}
                 <li>
                     <a href="{% url 'sales:pos_index' %}"><i class="fas fa-cash-register me-2"></i>Bán hàng (Sales)</a>
                 </li>
+                {% endif %}
+
+                <!-- Kitchen: Manager or Kitchen Crew -->
+                {% if user.is_manager or user.is_kitchen_crew or user.is_superuser %}
                 <li>
                     <a href="{% url 'kitchen:kds_board' %}"><i class="fas fa-fire me-2"></i>Bếp (KDS)</a>
                 </li>
+                {% endif %}
+
+                <!-- Reporting: Manager or Inventory Admin -->
+                {% if user.is_manager or user.is_inventory_manager or user.is_superuser %}
                 <li>
                     <a href="{% url 'reporting:dashboard' %}"><i class="fas fa-chart-line me-2"></i>Báo cáo</a>
                 </li>
+                {% endif %}
+
+                <!-- HR: Manager only -->
+                {% if user.is_manager or user.is_superuser %}
                 <li>
-                    <a href="/admin/"><i class="fas fa-cogs me-2"></i>Hệ thống</a>
+                    <a href="{% url 'core:user_list' %}"><i class="fas fa-users me-2"></i>Nhân sự (HR)</a>
                 </li>
+                <!-- Settings: Manager only -->
+                <li>
+                    <a href="{% url 'core:setting_list' %}"><i class="fas fa-cogs me-2"></i>Hệ thống</a>
+                </li>
+                {% endif %}
             </ul>
         </nav>
         {% endif %}
@@ -146,8 +175,8 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ms-auto">
                             <li class="nav-item">
-                                <span class="nav-link">Xin chào, <strong>{{ user.username }}</strong> ({{ user.role
-                                    }})</span>
+                                <span class="nav-link">Xin chào, <strong>{{ user.username }}</strong> ({{
+                                    user.get_role_display }})</span>
                             </li>
                             <li class="nav-item">
                                 <form action="{% url 'core:logout' %}" method="post" class="d-inline">

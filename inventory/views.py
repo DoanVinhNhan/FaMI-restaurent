@@ -11,13 +11,30 @@ from .forms import StockTakeTicketForm, StockTakeDetailFormSet
 
 # --- Task 009: Ingredient Views ---
 
-class IngredientListView(LoginRequiredMixin, ListView):
+from core.mixins import RoleRequiredMixin
+
+class IngredientListView(RoleRequiredMixin, ListView):
+    allowed_roles = ['MANAGER', 'INVENTORY']
     model = Ingredient
     template_name = 'inventory/ingredient_list.html'
     context_object_name = 'ingredients'
     paginate_by = 10
 
-class IngredientCreateView(LoginRequiredMixin, CreateView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            from django.db.models import Q
+            queryset = queryset.filter(Q(name__icontains=query) | Q(sku__icontains=query))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
+
+class IngredientCreateView(RoleRequiredMixin, CreateView):
+    allowed_roles = ['MANAGER', 'INVENTORY']
     model = Ingredient
     template_name = 'inventory/ingredient_form.html'
     fields = ['sku', 'name', 'unit', 'cost_per_unit', 'alert_threshold']
@@ -27,7 +44,8 @@ class IngredientCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Ingredient created successfully.")
         return super().form_valid(form)
 
-class IngredientUpdateView(LoginRequiredMixin, UpdateView):
+class IngredientUpdateView(RoleRequiredMixin, UpdateView):
+    allowed_roles = ['MANAGER', 'INVENTORY']
     model = Ingredient
     template_name = 'inventory/ingredient_form.html'
     fields = ['sku', 'name', 'unit', 'cost_per_unit', 'alert_threshold']
@@ -37,18 +55,50 @@ class IngredientUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, "Ingredient updated successfully.")
         return super().form_valid(form)
 
-class IngredientDeleteView(LoginRequiredMixin, DeleteView):
+class IngredientDeleteView(RoleRequiredMixin, DeleteView):
+    allowed_roles = ['MANAGER', 'INVENTORY']
     model = Ingredient
     template_name = 'inventory/ingredient_confirm_delete.html'
     success_url = reverse_lazy('inventory:ingredient_list')
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Ingredient deleted successfully.")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        
+        # Dependency Checks
+        # 1. Check if used in any Recipe
+        if self.object.used_in_recipes.exists():
+            messages.error(self.request, "Cannot delete ingredient because it is used in one or more recipes.")
+            return redirect('inventory:ingredient_list')
+
+        # 2. Check if Stock > 0
+        try:
+             # Refresh from DB to ensure we have latest relation
+             # Use related_name 'inventory_stock' (OneToOne)
+             if hasattr(self.object, 'inventory_stock') and self.object.inventory_stock.quantity_on_hand > 0:
+                 messages.error(self.request, f"Cannot delete ingredient. Stock on hand is {self.object.inventory_stock.quantity_on_hand} {self.object.unit}.")
+                 return redirect('inventory:ingredient_list')
+        except Exception as e:
+             pass
+
+        try:
+            self.object.delete()
+            messages.success(self.request, "Ingredient deleted successfully.")
+            return redirect(success_url)
+        except Exception as e:
+            # Catch ProtectedError here if manual check missed something
+            messages.error(self.request, "Cannot delete ingredient due to dependencies.")
+            return redirect('inventory:ingredient_list')
 
 # --- Task 008: Inventory Management Views ---
 
+from django.contrib.auth.decorators import user_passes_test
+
+def is_inventory_manager(user):
+    return user.is_authenticated and (user.role in ['MANAGER', 'INVENTORY'] or user.is_superuser)
+
 @login_required
+@user_passes_test(is_inventory_manager)
 def inventory_dashboard(request):
     """
     Overview of current stock levels and alerts.
@@ -103,6 +153,7 @@ def inventory_logs(request):
 # --- Task 025: Stock Take Views ---
 
 @login_required
+@user_passes_test(is_inventory_manager)
 def stock_take_list(request):
     """
     List all stock take history.

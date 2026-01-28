@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>System Settings</h2>
+    {% for group in groups %}
+    <div class="card mb-4">
+        <div class="card-header">
+            {{ group.group_name }}
+        </div>
+        <div class="card-body">
+            <p>{{ group.description }}</p>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Setting Key</th>
+                            <th>Value</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for setting in group.settings.all %}
+                        <tr>
+                            <td>{{ setting.setting_key }}</td>
+                            <td>
+                                {{ setting.setting_value }}
+                                {% if not setting.is_active %} (Inactive){% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'core:setting_edit' setting.pk %}"
+                                    class="btn btn-sm btn-primary">Edit</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">No settings in this group.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No setting groups found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

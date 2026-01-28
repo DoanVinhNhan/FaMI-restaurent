@@ -3,15 +3,16 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.dateparse import parse_date
+from django.contrib import messages
 from .services import ReportController
 
 # Basic access check
-def is_manager(user):
-    # In a real app, check user.role or permissions
-    return user.is_authenticated and (user.is_staff or user.is_superuser)
+def is_reporting_viewer(user):
+    # Manager or Inventory Manager only
+    return user.is_authenticated and (user.role in ['MANAGER', 'INVENTORY'] or user.is_superuser)
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(is_reporting_viewer)
 def report_dashboard(request: HttpRequest) -> HttpResponse:
     """
     Renders the main dashboard for selecting reports.
@@ -27,7 +28,7 @@ def report_dashboard(request: HttpRequest) -> HttpResponse:
     return render(request, 'reporting/dashboard.html', context)
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(is_reporting_viewer)
 def sales_report_view(request: HttpRequest) -> HttpResponse:
     """
     HTMX or Standard view to render sales report table.
@@ -38,16 +39,27 @@ def sales_report_view(request: HttpRequest) -> HttpResponse:
 
     today = date.today()
     if not start_str or not end_str:
-        # Fallback to defaults instead of 400
+        # Fallback to defaults
         start_date = today - timedelta(days=30)
         end_date = today
     else:
         start_date = parse_date(start_str)
         end_date = parse_date(end_str)
 
-    summary = ReportController.generate_sales_report(start_date, end_date)
+    try:
+        ReportController.validate_params(start_date, end_date)
+        summary = ReportController.generate_sales_report(start_date, end_date)
+        
+        # Check for empty data
+        if summary.total_orders == 0:
+             messages.info(request, "No data found for the selected range.")
+             
+    except ValueError as e:
+        messages.error(request, str(e))
+        # Return empty summary or render error state
+        summary = None 
 
-    if export == 'csv':
+    if export == 'csv' and summary:
         csv_content = ReportController.export_sales_to_csv(summary)
         response = HttpResponse(csv_content, content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="sales_report_{start_date}_{end_date}.csv"'
@@ -57,7 +69,7 @@ def sales_report_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'reporting/partials/sales_results.html', context)
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(is_reporting_viewer)
 def inventory_report_view(request: HttpRequest) -> HttpResponse:
     """
     View to render inventory variance report.
@@ -79,7 +91,7 @@ def inventory_report_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'reporting/partials/inventory_results.html', context)
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(is_reporting_viewer)
 def waste_report_view(request: HttpRequest) -> HttpResponse:
     """
     View to render waste analysis.

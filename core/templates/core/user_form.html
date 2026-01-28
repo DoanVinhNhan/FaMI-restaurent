@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">{{ title }}</h4>
+                <a href="{% url 'core:user_list' %}" class="btn-close btn-close-white"></a>
+            </div>
+            <div class="card-body p-4">
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    Vui lòng sửa các lỗi sau: {{ form.errors }}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <h5 class="text-secondary border-bottom pb-2 mb-3">Thông tin Tài khoản</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tên đăng nhập</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Họ</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Tên</label>
+                            {{ form.first_name }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        {{ form.email }}
+                    </div>
+
+                    <h5 class="text-secondary border-bottom pb-2 mb-3 mt-4">Phân quyền & Thông tin NV</h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Vai trò hệ thống</label>
+                            {{ form.role }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Mã nhân viên</label>
+                            {{ form.employee_code }}
+                        </div>
+                    </div>
+
+                    {% if 'is_active' in form.fields %}
+                    <div class="card bg-light mt-3 mb-3">
+                        <div class="card-body">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label fw-bold">Kích hoạt tài khoản</label>
+                            </div>
+                            <div class="form-check mt-2">
+                                {{ form.is_superuser }}
+                                <label class="form-check-label text-danger">Quyền Quản trị tối cao (Superuser)</label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{% url 'core:user_list' %}" class="btn btn-outline-secondary">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary px-4">Lưu lại</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

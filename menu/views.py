@@ -12,11 +12,18 @@ from django.utils import timezone
 from .models import MenuItem, Pricing
 from .forms import MenuItemForm, PricingForm
 
-class MenuItemListView(LoginRequiredMixin, ListView):
+from core.mixins import RoleRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
+
+def is_manager(user):
+    return user.is_authenticated and (user.is_manager() or user.is_superuser)
+
+class MenuItemListView(RoleRequiredMixin, ListView):
     """
     UC1: List all menu items.
     Allows filtering by active/inactive via GET parameter 'view'.
     """
+    allowed_roles = ['MANAGER']
     model = MenuItem
     template_name = 'menu/menu_item_list.html'
     context_object_name = 'menu_items'
@@ -42,6 +49,7 @@ class MenuItemListView(LoginRequiredMixin, ListView):
 
 
 @login_required
+@user_passes_test(is_manager)
 def menu_item_create_view(request: HttpRequest) -> HttpResponse:
     """
     UC1: Create a new Menu Item AND its initial Pricing.
@@ -88,20 +96,65 @@ def menu_item_create_view(request: HttpRequest) -> HttpResponse:
     })
 
 
-class MenuItemUpdateView(LoginRequiredMixin, UpdateView):
+@login_required
+@user_passes_test(is_manager)
+def menu_item_update_view(request: HttpRequest, pk: int) -> HttpResponse:
     """
-    UC1: Update Menu Item details (Name, Desc, Image, etc.).
-    Note: Pricing is usually managed separately or via a specific history view,
-    but we can allow editing the current item properties here.
+    UC1: Update Menu Item details.
+    Logic:
+    - Load Item and Current Pricing.
+    - If Price is changed -> Create NEW Pricing record (History).
+    - Update MenuItem fields.
     """
-    model = MenuItem
-    form_class = MenuItemForm
-    template_name = 'menu/menu_item_edit.html'
-    success_url = reverse_lazy('menu:menu_list')
+    menu_item = get_object_or_404(MenuItem, pk=pk)
+    
+    # Get current active pricing to pre-fill
+    current_pricing = menu_item.get_current_price()
+    initial_price = current_pricing.selling_price if current_pricing else menu_item.price
+    
+    if request.method == 'POST':
+        item_form = MenuItemForm(request.POST, request.FILES, instance=menu_item)
+        # We use PricingForm but don't bind it to an instance because we want to CREATE a new one if changed
+        # Or we bind to a dummy to validate.
+        price_form = PricingForm(request.POST)
 
-    def form_valid(self, form):
-        messages.success(self.request, "Menu item updated successfully.")
-        return super().form_valid(form)
+        if item_form.is_valid() and price_form.is_valid():
+            try:
+                with transaction.atomic():
+                    # 1. Update MenuItem
+                    saved_item = item_form.save(commit=False)
+                    new_price = price_form.cleaned_data['selling_price']
+                    
+                    # Check if price changed
+                    # Logic: If price different from initial, create new record
+                    if new_price != initial_price:
+                        # Create new Pricing
+                        Pricing.objects.create(
+                            menu_item=saved_item,
+                            selling_price=new_price,
+                            effective_date=timezone.now() # Immediate effect
+                        )
+                        # Update display price on item
+                        saved_item.price = new_price
+                    
+                    saved_item.save()
+                    
+                messages.success(request, f"Menu Item '{menu_item.name}' updated successfully.")
+                return redirect('menu:menu_list')
+            except Exception as e:
+                messages.error(request, f"Error updating item: {e}")
+        else:
+             messages.error(request, "Please correct the errors below.")
+    else:
+        item_form = MenuItemForm(instance=menu_item)
+        price_form = PricingForm(initial={'selling_price': initial_price, 'effective_date': timezone.now()})
+
+    return render(request, 'menu/menu_item_edit.html', {
+        'item_form': item_form,
+        'price_form': price_form,
+        'object': menu_item,
+        'title': f'Edit {menu_item.name}'
+    })
 
 
 @login_required

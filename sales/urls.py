@@ -24,7 +24,12 @@ urlpatterns = [
     path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
     path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
     
-    
+    # Promotion Management
+    path('promotions/', views.PromotionListView.as_view(), name='promotion_list'),
+    path('promotions/create/', views.PromotionCreateView.as_view(), name='promotion_create'),
+    path('promotions/<uuid:pk>/edit/', views.PromotionUpdateView.as_view(), name='promotion_edit'),
+    path('promotions/<uuid:pk>/delete/', views.PromotionDeleteView.as_view(), name='promotion_delete'),
+
     # API Endpoints
     path('api/sync/orders/', SyncOfflineOrdersView.as_view(), name='sync-offline-orders'),
     path('api/orders/create/', CreateThirdPartyOrderView.as_view(), name='api_create_order'),

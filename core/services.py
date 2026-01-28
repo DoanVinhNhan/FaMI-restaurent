@@ -1,6 +1,25 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from typing import Dict, Any
+from .models import SystemSetting
+
+class RestaurantService:
+    """
+    Service to handle restaurant-wide logic.
+    """
+    @staticmethod
+    def is_open() -> bool:
+        """
+        Checks if the restaurant is currently open.
+        Defaults to True if setting is missing.
+        """
+        try:
+            setting = SystemSetting.objects.get(setting_key='RESTAURANT_STATUS')
+            # Assuming value 'OPEN' or 'CLOSED'
+            return setting.setting_value.upper() == 'OPEN'
+        except SystemSetting.DoesNotExist:
+            # Default to Open if not configured
+            return True
 
 class NotificationService:
     """

@@ -41,7 +41,7 @@ class User(AbstractUser):
         return f"{self.username} - {self.get_role_display()}"
 
     def is_manager(self) -> bool:
-        return self.role == UserRole.MANAGER or self.is_superuser
+        return self.role in [UserRole.MANAGER, UserRole.ADMIN] or self.is_superuser
 
     def is_kitchen_crew(self) -> bool:
         return self.role == UserRole.KITCHEN

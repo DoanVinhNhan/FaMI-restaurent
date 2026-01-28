@@ -83,21 +83,33 @@ class PaymentController:
     Handles payment processing logic (UC7).
     Ensures atomicity between Order status update, Invoice generation, and Transaction logging.
     """
-    
+    @staticmethod
+    def calculate_change(order: Order, cash_received: Decimal) -> Decimal:
+        """
+        Calculates change to return to customer.
+        """
+        return max(Decimal('0.00'), cash_received - order.total_amount)
+
+    @staticmethod
+    def print_receipt(order: Order, transaction_id: int = None) -> None:
+        """
+        Mock implementation of sending print job to a receipt printer.
+        """
+        # In a real system, this would queue a job for a CUPS server or ESC/POS printer
+        print(f"[PRINTER] Printing Receipt for Order #{order.id}")
+        if transaction_id:
+            print(f"[PRINTER] Transaction Ref: {transaction_id}")
+        print("--------------------------------")
+        for detail in order.details.all():
+            print(f"{detail.quantity}x {detail.menu_item.name} ... {detail.total_price}")
+        print(f"TOTAL: {order.total_amount}")
+        print("--------------------------------")
+
     @staticmethod
     @transaction.atomic
     def process_payment(order_id: int, amount: Decimal, method: str, promo_code: str = None) -> dict:
         """
         Process a payment for an order.
-        
-        Args:
-            order_id (int): ID of the order.
-            amount (Decimal): Payment amount.
-            method (str): Payment method (CASH, CARD, QR).
-            promo_code (str): Optional promotion code.
-            
-        Returns:
-            dict: { 'success': bool, 'transaction_id': int, 'message': str }
         """
         try:
             order = Order.objects.select_for_update().get(pk=order_id)
@@ -108,38 +120,31 @@ class PaymentController:
         if order.status == Order.Status.PAID:
             return {'success': False, 'message': "Order is already paid."}
 
-        # 2. Apply Promotion (if any)
+        # 2. Apply Promotion (if any) - Assuming this is the FINAL step where we commit it
         discount = Decimal('0.00')
         if promo_code:
             discount = PromotionEngine.apply_promotion(promo_code, order)
-            # We don't persist discount on Order model yet based on schema, 
-            # ideally Order should have discount_amount field.
-            # For now, we deduct from payable amount or assume 'total_amount' is final.
-            # Strategy: We consider 'total_amount' as the subtotal in schema, 
-            # but usually it's final. Let's assume we update total_amount OR 
-            # we just accept less payment if discount covers it.
-            
-            # Better approach: Update order total to reflect discount
-            # But we must be careful not to double apply if retrying.
-            # For this 'simple' logic:
-            pass 
-
-        # Calculate final required
-        final_required = order.total_amount - discount
-        if final_required < 0: final_required = Decimal(0)
+            # Apply discount to total permanently for the invoice
+            # Note: Ideally we should track 'original_total' and 'discount_applied'
+            if discount > 0:
+                order.total_amount -= discount
+                if order.total_amount < 0:
+                    order.total_amount = Decimal('0.00')
+                order.save()
 
         # 3. Check Payment Amount
-        # If CASH, user input amount. If Online, amount usually equals total.
+        final_required = order.total_amount
+        
         if amount < final_required:
             # Create a Failed Transaction Log
-            tx = Transaction.objects.create(
+            Transaction.objects.create(
                 order=order,
                 amount=amount,
                 payment_method=method,
                 status=Transaction.PaymentStatus.FAILED,
                 reference_code=f"FAILED-{timezone.now().timestamp()}"
             )
-            return {'success': False, 'transaction_id': tx.pk, 'message': f"Insufficient payment. Required: {final_required}"}
+            return {'success': False, 'transaction_id': None, 'message': f"Insufficient payment. Required: {final_required}"}
 
         # 4. Gateway Integration (if not CASH)
         gateway_ref = None
@@ -166,21 +171,24 @@ class PaymentController:
         )
 
         # 7. Update Order Status
-        # Update total to reflect what was actually paid/finalized if we applied discount
-        if discount > 0:
-            # This mutates the order total permanently
-            order.total_amount = final_required 
-            
         order.status = Order.Status.PAID
         order.save()
         
         # 8. Deduct Inventory
         from inventory.services import InventoryService
-        InventoryService.deduct_for_order(order)
+        try:
+            InventoryService.deduct_for_order(order)
+        except Exception as e:
+            # Log error but don't fail payment
+            print(f"Inventory deduction failed: {e}")
+
+        # 9. Print Receipt
+        PaymentController.print_receipt(order, tx.pk)
 
         return {
             'success': True,
             'transaction_id': tx.pk,
-            'message': "Payment successful",
-            'invoice_id': order.invoice.pk
+            'message': u"Payment successful",
+            'invoice_id': order.invoice.pk,
+            'change': PaymentController.calculate_change(order, amount) if method == 'CASH' else 0
         }

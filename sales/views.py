@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # REST Framework
 from rest_framework.views import APIView
@@ -27,10 +28,17 @@ logger = logging.getLogger(__name__)
 
 # --- Table Management Views (Task 013) ---
 
-class TableListView(ListView):
+from core.mixins import RoleRequiredMixin
+
+class TableListView(RoleRequiredMixin, ListView):
     """
     Display a list of all restaurant tables.
     """
+    allowed_roles = ['MANAGER', 'CASHIER'] # Cashier needs to see list maybe? Or just POS?
+    # Actually Table Management (CRUD) is Manager. POS Usage is Cashier.
+    # Let's restrict CRUD to Manager.
+    allowed_roles = ['MANAGER'] 
+    
     model = RestaurantTable
     template_name = 'sales/table_list.html'
     context_object_name = 'tables'
@@ -85,7 +93,13 @@ class TableDeleteView(SuccessMessageMixin, DeleteView):
 
 # --- POS Views (Task 018) ---
 
+from django.contrib.auth.decorators import user_passes_test
+
+def is_cashier_or_manager(user):
+    return user.is_authenticated and (user.role in ['MANAGER', 'CASHIER'] or user.is_superuser)
+
 @login_required
+@user_passes_test(is_cashier_or_manager)
 @require_GET
 def pos_index(request: HttpRequest) -> HttpResponse:
     """
@@ -245,7 +259,7 @@ def submit_order(request: HttpRequest, table_id: int) -> HttpResponse:
             return redirect('sales:pos_index')
         else:
              messages.error(request, "No pending order found to submit.")
-             return redirect('sales:pos_table_detail', table_id=table.id)
+             return redirect('sales:pos_table_detail', table_id=table.pk)
 
     if request.method == 'GET':
          return HttpResponse("Method GET allowed for verification. Use POST to perform action.")
@@ -333,34 +347,47 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
     table = get_object_or_404(RestaurantTable, pk=table_id)
     # Get the latest order that is COOKING or SERVED (assuming payment after meal)
     # usage flow: Pending -> Cooking -> [Served] -> Paid.
-    # Current flow in submit_order sets status to COOKING.
     # We should allow paying for COOKING orders.
     
     order = Order.objects.filter(
         table=table, 
-        status=Order.Status.COOKING
+        status__in=[Order.Status.COOKING, Order.Status.SERVED]
     ).first()
     
+    
     if not order:
-        messages.error(request, "No active order to pay.")
+        # Check if just paid (race condition or refresh)
+        paid_order = Order.objects.filter(table=table, status=Order.Status.PAID).order_by('-updated_at').first()
+        if paid_order:
+             messages.info(request, "Latest order for this table is already paid.")
+        else:
+             messages.error(request, "No active order to pay.")
         return redirect('sales:pos_index')
         
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method', 'CASH')
-        # Fix: Convert to Decimal safely
+        promo_code = request.POST.get('promo_code', '').strip()
+        
+        # Parse Amount
         try:
             received_amount = Decimal(request.POST.get('received_amount', 0))
         except:
             received_amount = Decimal(0)
             
-        promo_code = request.POST.get('promo_code', '')
-        
         # If method is NOT cash, we assume exact payment for now (frontend handles it)
         if payment_method != 'CASH':
             received_amount = order.total_amount
 
         from .services import PaymentController
         
+        # Logic: If just applying promo (Action button), don't process payment yet
+        if 'apply_promo' in request.POST:
+             # Just calculate and show new total - View logic only or dry-run?
+             # For simplicity, we just reload page with applied promo temporarily or use JS.
+             # In standard Django without JS, we might need to store promo in session or URL.
+             # Here, let's assume we process everything in one go or we would use HTMX for promo.
+             pass 
+
         result = PaymentController.process_payment(
             order_id=order.id,
             amount=received_amount, 
@@ -369,10 +396,55 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
         )
         
         if result['success']:
-             messages.success(request, f"Payment successful. Invoice generated.")
+             msg = f"Payment successful. Invoice #{result.get('invoice_id')}."
+             if result.get('change', 0) > 0:
+                 msg += f" Change: {result.get('change')}"
+                 
+             messages.success(request, msg)
+             
+             # Free the table
+             table.status = RestaurantTable.TableStatus.AVAILABLE
+             table.save()
+             
              return redirect('sales:pos_index')
         else:
              messages.error(request, f"Payment failed: {result['message']}")
              # Fallthrough to render form again
         
     return render(request, 'sales/payment_form.html', {'table': table, 'order': order})
+
+
+# --- Promotion Management Views (Task 020) ---
+from .forms import PromotionForm
+from .models import Promotion
+
+class PromotionListView(RoleRequiredMixin, ListView):
+    allowed_roles = ['MANAGER']
+    model = Promotion
+    template_name = 'sales/promotion_list.html'
+    context_object_name = 'promotions'
+    paginate_by = 10
+
+class PromotionCreateView(SuccessMessageMixin, CreateView):
+    model = Promotion
+    form_class = PromotionForm
+    template_name = 'sales/promotion_form.html'
+    success_url = reverse_lazy('sales:promotion_list')
+    success_message = "Promotion created successfully."
+
+class PromotionUpdateView(SuccessMessageMixin, UpdateView):
+    model = Promotion
+    form_class = PromotionForm
+    template_name = 'sales/promotion_form.html'
+    success_url = reverse_lazy('sales:promotion_list')
+    success_message = "Promotion updated successfully."
+
+class PromotionDeleteView(SuccessMessageMixin, DeleteView):
+    model = Promotion
+    template_name = 'sales/promotion_confirm_delete.html'
+    success_url = reverse_lazy('sales:promotion_list')
+    success_message = "Promotion deleted successfully."
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, self.success_message)
+        return super().delete(request, *args, **kwargs)

@@ -37,6 +37,19 @@ class ReportController:
     """
 
     @staticmethod
+    def validate_params(start_date: date, end_date: date) -> None:
+        """
+        Validates report parameters.
+        Raises ValueError if invalid.
+        """
+        if start_date > end_date:
+            raise ValueError("Start date cannot be after end date.")
+        
+        # Limit range to prevent overload (Sequence: 'Data quá tải')
+        if (end_date - start_date).days > 365:
+             raise ValueError("Date range too large. Please limit to 1 year.")
+
+    @staticmethod
     def generate_sales_report(start_date: date, end_date: date) -> SalesReportSummary:
         """
         Generates a sales report for a given date range.

@@ -11,7 +11,7 @@ urlpatterns = [
     path('create/', views.menu_item_create_view, name='menu_create'),
     
     # Update view
-    path('<int:pk>/edit/', views.MenuItemUpdateView.as_view(), name='menu_edit'),
+    path('items/<int:pk>/edit/', views.menu_item_update_view, name='menu_item_edit'),
     
     # Soft Delete view
     path('<int:pk>/delete/', views.menu_item_soft_delete_view, name='menu_delete'),

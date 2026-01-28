@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Promotion</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="card p-4">
+            {{ form.as_div }}
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Save Promotion</button>
+                <a href="{% url 'sales:promotion_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -62,7 +62,7 @@
                                 {% endif %}
                             </td>
                             <td class="text-end pe-4">
-                                <a href="{% url 'menu:menu_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
+                                <a href="{% url 'menu:menu_item_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
                                     title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
                                 {% if item.status == 'ACTIVE' %}
                                 <a href="{% url 'menu:menu_delete' item.pk %}" class="btn btn-sm btn-outline-danger"

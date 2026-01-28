@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Promotions</h2>
+        <a href="{% url 'sales:promotion_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Add New Promotion
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Info</th>
+                    <th>Code</th>
+                    <th>Discount</th>
+                    <th>Valid Period</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promotion in promotions %}
+                <tr>
+                    <td>
+                        <strong>{{ promotion.name }}</strong>
+                    </td>
+                    <td><span class="badge bg-info text-dark">{{ promotion.promo_code }}</span></td>
+                    <td>
+                        {% if promotion.discount_type == 'PERCENTAGE' %}
+                        {{ promotion.discount_value }}%
+                        {% else %}
+                        ${{ promotion.discount_value }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ promotion.start_date|date:"Y-m-d" }} <br>to<br> {{ promotion.end_date|date:"Y-m-d" }}
+                    </td>
+                    <td>
+                        {% if promotion.is_active %}
+                        <span class="badge bg-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'sales:promotion_edit' promotion.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'sales:promotion_delete' promotion.pk %}"
+                            class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No promotions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

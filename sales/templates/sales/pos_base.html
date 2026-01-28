@@ -57,7 +57,10 @@
         </a>
         <div class="d-flex text-white align-items-center">
             <span class="me-3"><i class="bi bi-person-circle me-1"></i>{{ user.username }}</span>
-            <a href="/admin/logout/" class="btn btn-sm btn-danger">Logout</a>
+            <form action="{% url 'core:logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+            </form>
         </div>
     </nav>
 

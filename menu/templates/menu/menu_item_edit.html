@@ -64,13 +64,26 @@
                             </div>
                         </div>
 
-                        <div class="alert alert-info mt-4 d-flex align-items-center">
-                            <i class="fas fa-info-circle fa-2x me-3"></i>
-                            <div>
-                                <strong>Quản lý Giá bán:</strong><br>
-                                Để thay đổi giá bán, vui lòng sử dụng chức năng <a href="/admin/menu/pricing/"
-                                    class="alert-link">Quản lý
-                                    Lịch sử Giá</a> (Admin Panel).
+                        <!-- Pricing Section -->
+                        <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2">Điều chỉnh Giá bán</h5>
+                        <div class="bg-light p-3 rounded border mb-4">
+                            {% if price_form.errors %}
+                            <div class="alert alert-danger">{{ price_form.errors }}</div>
+                            {% endif %}
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Giá bán Mới (VND)</label>
+                                    <div class="input-group">
+                                        {{ price_form.selling_price }}
+                                        <span class="input-group-text">₫</span>
+                                    </div>
+                                    <div class="form-text text-muted">Thay đổi giá sẽ tạo bản ghi lịch sử giá mới.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Ngày hiệu lực</label>
+                                    {{ price_form.effective_date }}
+                                </div>
                             </div>
                         </div>
 
