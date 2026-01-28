@@ -70,6 +70,37 @@ def sales_report_view(request: HttpRequest) -> HttpResponse:
 
 @login_required
 @user_passes_test(is_reporting_viewer)
+def sales_drilldown_view(request: HttpRequest) -> HttpResponse:
+    """
+    HTMX view that returns a partial table of Orders related to a given menu item in the date range.
+    Accepts GET params: start_date, end_date, item (menu item name), page
+    """
+    start_str = request.GET.get('start_date')
+    end_str = request.GET.get('end_date')
+    item = request.GET.get('item')
+    page = int(request.GET.get('page', 1))
+
+    # Fallback dates similar to other views
+    today = date.today()
+    if not start_str or not end_str:
+        start_date = today - timedelta(days=30)
+        end_date = today
+    else:
+        start_date = parse_date(start_str)
+        end_date = parse_date(end_str)
+
+    try:
+        ReportController.validate_params(start_date, end_date)
+    except ValueError as e:
+        messages.error(request, str(e))
+        return render(request, 'reporting/partials/sales_drilldown.html', {'orders_page': None, 'item': item})
+
+    orders_page = ReportController.get_orders_for_item(start_date, end_date, item, page=page)
+
+    return render(request, 'reporting/partials/sales_drilldown.html', {'orders_page': orders_page, 'item': item})
+
+@login_required
+@user_passes_test(is_reporting_viewer)
 def inventory_report_view(request: HttpRequest) -> HttpResponse:
     """
     View to render inventory variance report.
