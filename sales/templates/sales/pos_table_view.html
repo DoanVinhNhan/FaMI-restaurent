@@ -4,16 +4,25 @@
 <div class="row pos-container">
     <!-- LEFT: MENU AREA -->
     <div class="col-lg-8 d-flex flex-column h-100 pe-0">
-        <!-- Categories -->
+        <!-- Categories & Combo Filter -->
         <div class="card mb-3 shadow-sm">
             <div class="card-body p-2 d-flex gap-2 overflow-auto">
+                <!-- All items -->
                 <a href="?category="
-                    class="btn {% if not selected_cat %}btn-dark{% else %}btn-outline-dark{% endif %} text-nowrap">
+                    class="btn {% if not selected_cat and not combo_only %}btn-dark{% else %}btn-outline-dark{% endif %} text-nowrap">
                     Tất cả
                 </a>
+
+                <!-- Combo-only filter -->
+                <a href="?combo=1"
+                    class="btn {% if combo_only %}btn-dark{% else %}btn-outline-warning{% endif %} text-nowrap">
+                    Combo
+                </a>
+
+                <!-- Category filters (normal items, regardless of combo flag) -->
                 {% for cat in categories %}
                 <a href="?category={{ cat.id }}"
-                    class="btn {% if selected_cat == cat.id %}btn-dark{% else %}btn-outline-dark{% endif %} text-nowrap">
+                    class="btn {% if selected_cat == cat.id and not combo_only %}btn-dark{% else %}btn-outline-dark{% endif %} text-nowrap">
                     {{ cat.name }}
                 </a>
                 {% endfor %}
@@ -26,11 +35,11 @@
                 {% for item in menu_items %}
                 <div class="col-6 col-md-4 col-xl-3">
                     <!-- HTMX: Post to add item, swap the cart div -->
-                    {% if item.status == 'OUT_OF_STOCK' %}
+                    {% if item.is_out_of_stock %}
                     <div class="card menu-item-card border-0 shadow-sm opacity-50" style="pointer-events: none;">
                         <div
                             class="position-absolute top-50 start-50 translate-middle badge bg-danger fs-6 rounded-pill z-3">
-                            HẾT HÀNG
+                            ĐÃ HẾT
                         </div>
                         {% else %}
                         <div class="card menu-item-card border-0 shadow-sm"
@@ -49,7 +58,12 @@
                             {% endif %}
 
                             <div class="card-body p-2 text-center">
-                                <h6 class="card-title mb-1 text-truncate">{{ item.name }}</h6>
+                                <h6 class="card-title mb-1 text-truncate">
+                                    {{ item.name }}
+                                    {% if item.is_combo %}
+                                    <span class="badge bg-info text-dark ms-1">Combo</span>
+                                    {% endif %}
+                                </h6>
                                 <p class="card-text fw-bold text-primary mb-0">
                                     {% if item.get_current_price %}
                                     ${{ item.get_current_price.selling_price }}
@@ -57,6 +71,20 @@
                                     <small class="text-danger">N/A</small>
                                     {% endif %}
                                 </p>
+                                {% if item.is_combo and item.combo_components.all %}
+                                <div class="d-flex justify-content-center align-items-center mt-2">
+                                    <button type="button" class="btn btn-sm btn-outline-info view-combo-details" data-item-name="{{ item.name|escape }}" data-target="#comboModal" data-id="{{ item.id }}">
+                                        <i class="bi bi-eye"></i> Chi tiết
+                                    </button>
+                                </div>
+                                <div id="combo-components-{{ item.id }}" class="d-none">
+                                    <ul class="list-unstyled mb-0 small text-muted">
+                                        {% for cc in item.combo_components.all %}
+                                        <li>{{ cc.quantity }} x {{ cc.item.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -86,4 +114,61 @@
             </div>
         </div>
     </div>
+    <!-- Combo Details Modal -->
+    <div class="modal fade" id="comboModal" tabindex="-1" aria-labelledby="comboModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comboModalLabel">Combo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="combo-modal-body"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        const modalEl = document.getElementById('comboModal');
+        const modalBody = document.getElementById('combo-modal-body');
+        const modalLabel = document.getElementById('comboModalLabel');
+
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            if(!button) return;
+            const itemId = button.getAttribute('data-id');
+            const itemName = button.getAttribute('data-item-name');
+            const hidden = document.getElementById('combo-components-' + itemId);
+            if(hidden){
+                modalBody.innerHTML = hidden.innerHTML;
+            } else {
+                modalBody.innerHTML = '<p class="text-muted">Không có thông tin.</p>';
+            }
+            modalLabel.textContent = itemName + ' — Thành phần';
+        });
+
+        // Attach click handlers to buttons (for browsers/environments where show.bs.modal may not be fired)
+        document.querySelectorAll('.view-combo-details').forEach(function(btn){
+            btn.addEventListener('click', function(e){
+                const itemId = btn.getAttribute('data-id');
+                const hidden = document.getElementById('combo-components-' + itemId);
+                if(hidden){
+                    modalBody.innerHTML = hidden.innerHTML;
+                } else {
+                    modalBody.innerHTML = '<p class="text-muted">Không có thông tin.</p>';
+                }
+                modalLabel.textContent = btn.getAttribute('data-item-name') + ' — Thành phần';
+                // Show Bootstrap modal
+                var modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            });
+        });
+    })();
+    </script>
+
     {% endblock %}

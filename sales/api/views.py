@@ -77,7 +77,11 @@ class CreateThirdPartyOrderView(APIView):
                     except MenuItem.DoesNotExist:
                          return Response({"error": f"Invalid Menu Item SKU: {sku}"}, status=status.HTTP_400_BAD_REQUEST)
 
-                    if menu_item.status != 'ACTIVE':
+                    if menu_item.is_out_of_stock:
+                         unavailable_items.append({sku: "Out of Stock"})
+                         continue
+
+                    if not menu_item.is_active:
                          unavailable_items.append({sku: "Item is inactive"})
                          continue
 

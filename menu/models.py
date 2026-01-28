@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from .services import ImageService
 import uuid
 
@@ -57,7 +58,14 @@ class MenuItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Display Price"))
     
     image = models.ImageField(upload_to='menu_items/', blank=True, null=True, verbose_name=_("Product Image"))
-    
+
+    # Flag to distinguish Combo items vs normal items
+    is_combo = models.BooleanField(
+        default=False,
+        verbose_name=_("Is Combo?"),
+        help_text=_("Mark this menu item as a combo that groups multiple other items.")
+    )
+
     # New Fields for Task 11
     prep_time = models.PositiveIntegerField(
         default=10,
@@ -91,6 +99,23 @@ class MenuItem(models.Model):
     @property
     def is_active(self):
         return self.status == self.ItemStatus.ACTIVE
+
+    @property
+    def is_out_of_stock(self):
+        """Boolean property indicating item is explicitly marked Out of Stock."""
+        return self.status == self.ItemStatus.OUT_OF_STOCK
+
+    def is_stock_available(self, quantity: int = 1) -> bool:
+        """
+        Checks if the menu item can be prepared with current inventory for the given quantity.
+        Delegates to InventoryService.check_availability to avoid circular imports at module load time.
+        """
+        try:
+            from inventory.services import InventoryService
+            return InventoryService.check_availability(self, quantity)
+        except Exception:
+            # If inventory service is unavailable for some reason, default to True to avoid blocking
+            return True
 
     def get_current_price(self):
         """
@@ -219,3 +244,46 @@ class RecipeIngredient(models.Model):
 
     def __str__(self) -> str:
         return f"{self.ingredient} x {self.quantity} {self.unit}"
+
+
+class ComboComponent(models.Model):
+    """
+    Represents the relationship between a Combo MenuItem and its component MenuItems.
+    Only MenuItems marked as is_combo=True should be used as `combo`.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    combo = models.ForeignKey(
+        'menu.MenuItem',
+        on_delete=models.CASCADE,
+        related_name='combo_components',
+        verbose_name=_("Combo Item"),
+    )
+    item = models.ForeignKey(
+        'menu.MenuItem',
+        on_delete=models.PROTECT,
+        related_name='part_of_combos',
+        verbose_name=_("Component Item"),
+    )
+    quantity = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Quantity in Combo"),
+        help_text=_("How many of this item are included in the combo."),
+    )
+
+    class Meta:
+        verbose_name = _("Combo Component")
+        verbose_name_plural = _("Combo Components")
+        unique_together = ('combo', 'item')
+
+    def __str__(self) -> str:
+        return f"{self.combo.name} -> {self.quantity} x {self.item.name}"
+
+    def clean(self):
+        """Model-level validation: prevent a combo from including itself as a component."""
+        if self.combo_id and self.item_id and self.combo_id == self.item_id:
+            raise ValidationError("A combo cannot include itself as a component.")
+
+    def save(self, *args, **kwargs):
+        # Ensure validation runs at save time as well
+        self.full_clean()
+        super().save(*args, **kwargs)

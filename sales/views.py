@@ -121,13 +121,23 @@ def pos_table_detail(request: HttpRequest, table_id: int) -> HttpResponse:
     """
     table = get_object_or_404(RestaurantTable, pk=table_id)
     categories = Category.objects.all()
-    
-    # Get active category filter
+
+    # Determine filters
     cat_id = request.GET.get('category')
+    combo_only = request.GET.get('combo') == '1'
+
+    # Base queryset: show items that are not INACTIVE (include OUT_OF_STOCK for POS display)
+    menu_items = MenuItem.objects.exclude(status=MenuItem.ItemStatus.INACTIVE).prefetch_related(
+        'combo_components__item'
+    )
+
+    # Filter by category if provided
     if cat_id:
-        menu_items = MenuItem.objects.filter(category_id=cat_id, status='ACTIVE')
-    else:
-        menu_items = MenuItem.objects.filter(status='ACTIVE')
+        menu_items = menu_items.filter(category_id=cat_id)
+
+    # Optional filter: show only combo items
+    if combo_only:
+        menu_items = menu_items.filter(is_combo=True)
 
     # Get ALL active orders for history display (Cooking/Served)
     active_orders = Order.objects.filter(
@@ -147,7 +157,8 @@ def pos_table_detail(request: HttpRequest, table_id: int) -> HttpResponse:
         'menu_items': menu_items,
         'pending_order': pending_order, # The cart
         'active_orders': active_orders, # The history
-        'selected_cat': int(cat_id) if cat_id else None
+        'selected_cat': int(cat_id) if cat_id else None,
+        'combo_only': combo_only,
     }
     return render(request, 'sales/pos_table_view.html', context)
 
@@ -165,7 +176,7 @@ def add_to_cart(request: HttpRequest, table_id: int, item_id: int) -> HttpRespon
         return HttpResponse("Method GET allowed for verification. Use POST to perform action.")
         
     # Check for Out of Stock
-    if menu_item.status == MenuItem.ItemStatus.OUT_OF_STOCK:
+    if menu_item.is_out_of_stock:
         return HttpResponseBadRequest("Item is Out of Stock")
 
     with transaction.atomic():

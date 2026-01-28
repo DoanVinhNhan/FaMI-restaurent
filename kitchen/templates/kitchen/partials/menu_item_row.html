@@ -9,24 +9,24 @@
         </div>
         {% endif %}
         <span
-            class="fw-medium {% if item.status == 'OUT_OF_STOCK' %}text-muted text-decoration-line-through{% endif %}">
+            class="fw-medium {% if item.is_out_of_stock %}text-muted text-decoration-line-through{% endif %}">
             {{ item.name }}
         </span>
     </td>
     <td><span class="badge bg-light text-dark border">{{ item.category.name }}</span></td>
     <td class="text-center">
-        {% if item.status == 'ACTIVE' %}
+        {% if item.is_active %}
         <span class="badge bg-success">Đang bán</span>
         {% else %}
-        <span class="badge bg-danger">Hết hàng</span>
+        <span class="badge bg-danger">Đã hết</span>
         {% endif %}
     </td>
     <td class="text-end">
         <button
-            class="btn btn-sm {% if item.status == 'ACTIVE' %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+            class="btn btn-sm {% if item.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
             hx-post="{% url 'kitchen:toggle_menu_item_stock' item.id %}" hx-target="#item-row-{{ item.id }}"
             hx-swap="outerHTML">
-            {% if item.status == 'ACTIVE' %}
+            {% if item.is_active %}
             <i class="bi bi-slash-circle"></i> Báo Hết
             {% else %}
             <i class="bi bi-check-circle"></i> Mở Bán

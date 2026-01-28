@@ -128,9 +128,21 @@ class Command(BaseCommand):
         self.stdout.write("- Creating Menu & Recipes...")
         
         # Categories
-        cat_food, _ = Category.objects.get_or_create(name='Đồ Ăn (Food)', defaults={'printer_target': 'KITCHEN'})
-        cat_drink, _ = Category.objects.get_or_create(name='Đồ Uống (Drink)', defaults={'printer_target': 'BAR'})
-        cat_snack, _ = Category.objects.get_or_create(name='Ăn Vặt (Snack)', defaults={'printer_target': 'KITCHEN'})
+        cat_food, _ = Category.objects.get_or_create(
+            name='Đồ Ăn (Food)', defaults={'printer_target': 'KITCHEN'}
+        )
+        cat_drink, _ = Category.objects.get_or_create(
+            name='Đồ Uống (Drink)', defaults={'printer_target': 'BAR'}
+        )
+        cat_snack, _ = Category.objects.get_or_create(
+            name='Ăn Vặt (Snack)', defaults={'printer_target': 'KITCHEN'}
+        )
+        # Pre-create a dedicated Combo category for future combo items
+        self.stdout.write("- Ensuring 'Combo' category exists...")
+        cat_combo, _ = Category.objects.get_or_create(
+            name='Combo',
+            defaults={'printer_target': 'KITCHEN'}
+        )
 
         menu_data = [
             # Main Courses
