@@ -8070,3 +8070,43 @@ WARNING 2026-01-28 18:53:40,354 log Not Found: /media/menu_items/TEST-MENU-01_17
 WARNING 2026-01-28 18:53:40,355 basehttp "GET /media/menu_items/TEST-MENU-01_1769599436_bqoCyMl.jpg HTTP/1.1" 404 4943
 WARNING 2026-01-28 18:53:59,050 log Not Found: /media/menu_items/TEST-MENU-01_1769599436_bqoCyMl.jpg
 WARNING 2026-01-28 18:53:59,053 basehttp "GET /media/menu_items/TEST-MENU-01_1769599436_bqoCyMl.jpg HTTP/1.1" 404 4943
+ERROR 2026-01-28 19:07:17,315 exception Invalid HTTP_HOST header: 'sanyo-adding-weapon-bottom.trycloudflare.com'. You may need to add 'sanyo-adding-weapon-bottom.trycloudflare.com' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'sanyo-adding-weapon-bottom.trycloudflare.com'. You may need to add 'sanyo-adding-weapon-bottom.trycloudflare.com' to ALLOWED_HOSTS.
+WARNING 2026-01-28 19:07:17,338 log Bad Request: /
+WARNING 2026-01-28 19:07:17,338 basehttp "GET / HTTP/1.1" 400 75427
+ERROR 2026-01-28 19:07:17,728 exception Invalid HTTP_HOST header: 'sanyo-adding-weapon-bottom.trycloudflare.com'. You may need to add 'sanyo-adding-weapon-bottom.trycloudflare.com' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'sanyo-adding-weapon-bottom.trycloudflare.com'. You may need to add 'sanyo-adding-weapon-bottom.trycloudflare.com' to ALLOWED_HOSTS.
+WARNING 2026-01-28 19:07:17,742 log Bad Request: /favicon.ico
+WARNING 2026-01-28 19:07:17,742 basehttp "GET /favicon.ico HTTP/1.1" 400 75293
+WARNING 2026-01-28 19:09:17,098 log Not Found: /favicon.ico
+WARNING 2026-01-28 19:09:17,098 basehttp "GET /favicon.ico HTTP/1.1" 404 4586
+WARNING 2026-01-28 19:09:24,151 log Not Found: /robots.txt
+WARNING 2026-01-28 19:09:24,152 basehttp "GET /robots.txt HTTP/1.1" 404 4583
+WARNING 2026-01-28 19:10:40,319 log Forbidden (Origin checking failed - https://sanyo-adding-weapon-bottom.trycloudflare.com does not match any trusted origins.): /login/
+WARNING 2026-01-28 19:10:40,320 basehttp "POST /login/ HTTP/1.1" 403 2599
+WARNING 2026-01-28 19:27:15,144 log Not Found: /favicon.ico
+WARNING 2026-01-28 19:27:15,145 basehttp "GET /favicon.ico HTTP/1.1" 404 4587

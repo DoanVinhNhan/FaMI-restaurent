@@ -36,7 +36,22 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    '0.0.0.0', 
+    'testserver',
+    'sanyo-adding-weapon-bottom.trycloudflare.com', # Thêm dòng này
+]
+
+# 1. Thêm domain của Cloudflare vào danh sách tin cậy cho CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://sanyo-adding-weapon-bottom.trycloudflare.com',
+]
+
+# 2. Đảm bảo Django hiểu rằng request đang đến qua một proxy an toàn (HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 
 # 3. Application Definition
