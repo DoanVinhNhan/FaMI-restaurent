@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 
 # Models
 from core.models import SystemSetting
-from inventory.models import Ingredient, InventoryItem, StockTake, StockTakeDetail
+from inventory.models import Ingredient, InventoryItem, StockTakeTicket, StockTakeDetail
 from menu.models import Category, MenuItem, Pricing, Recipe, RecipeIngredient
 from sales.models import RestaurantTable, Order, OrderDetail
 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
     def clean_data(self):
         # Delete dependent first
         StockTakeDetail.objects.all().delete()
-        StockTake.objects.all().delete()
+        StockTakeTicket.objects.all().delete()
         OrderDetail.objects.all().delete()
         
         Order.objects.all().delete()
