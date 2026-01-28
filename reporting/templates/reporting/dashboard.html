@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container-fluid py-4">
@@ -85,11 +86,16 @@
 
     <!-- Results Area -->
     <div id="reportResults" class="mb-4">
+        <!-- Spinner -->
+        <div id="reportSpinner" class="spinner-overlay d-none text-center my-3">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
         <!-- HTMX results load here -->
     </div>
 </div>
 
 <!-- Chart.js CDN -->
+<script src="{% static 'reporting/reporting.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -111,11 +117,38 @@
 
             renderRevenueChart(data.revenue_chart);
             renderTopItemsChart(data.top_items_chart);
+
+            // Bind click handlers if Reporting helper is available
+            if (window.Reporting && typeof window.Reporting.bindChartClickHandlers === 'function') {
+                try {
+                    window.Reporting.bindChartClickHandlers(revenueChartInstance, {
+                        endpoint: "{% url 'reporting:sales_drilldown' %}",
+                        startSelector: '#startDate',
+                        endSelector: '#endDate'
+                    });
+
+                    window.Reporting.bindChartClickHandlers(topItemsChartInstance, {
+                        endpoint: "{% url 'reporting:sales_drilldown' %}",
+                        startSelector: '#startDate',
+                        endSelector: '#endDate'
+                    });
+                } catch (e) {
+                    console.warn('Failed to bind chart click handlers', e);
+                }
+            }
         } catch (error) {
             console.error('Error fetching chart data:', error);
             // alert('Failed to load chart data.'); // Optional: uncomment if alerting user is desired
         }
     }
+
+    // HTMX spinner hooks (show/hide spinner around HTMX requests)
+    document.body.addEventListener('htmx:beforeRequest', function () {
+        const s = document.getElementById('reportSpinner'); if (s) s.classList.remove('d-none');
+    });
+    document.body.addEventListener('htmx:afterSwap', function () {
+        const s = document.getElementById('reportSpinner'); if (s) s.classList.add('d-none');
+    });
 
     function renderRevenueChart(chartData) {
         const ctx = document.getElementById('revenueChart').getContext('2d');
@@ -152,6 +185,14 @@
                     }
                 },
                 plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const v = context.parsed.y;
+                                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
+                            }
+                        }
+                    },
                     legend: {
                         display: true,
                         position: 'top',

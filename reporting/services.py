@@ -193,3 +193,33 @@ class ReportController:
             writer.writerow([item['menu_item__name'], item['total_qty'], item['total_sales']])
 
         return output.getvalue()
+
+    @staticmethod
+    def get_orders_for_item(start_date: date, end_date: date, menu_item_name: str, page: int = 1, per_page: int = 25):
+        """
+        Returns a Paginator page of Orders that include the given menu item name within the date range.
+        """
+        from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+        start_dt = timezone.make_aware(datetime.combine(start_date, time.min))
+        end_dt = timezone.make_aware(datetime.combine(end_date, time.max))
+
+        q = OrderDetail.objects.select_related('order', 'menu_item').filter(
+            order__created_at__range=(start_dt, end_dt),
+            order__status=Order.Status.PAID
+        )
+        if menu_item_name:
+            q = q.filter(menu_item__name=menu_item_name)
+
+        # Get distinct orders and preserve ordering by most recent
+        order_ids = q.values_list('order_id', flat=True).distinct()
+        orders = Order.objects.filter(id__in=list(order_ids)).order_by('-created_at')
+
+        paginator = Paginator(orders, per_page)
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        return page_obj
