@@ -72,12 +72,12 @@ def sales_report_view(request: HttpRequest) -> HttpResponse:
 @user_passes_test(is_reporting_viewer)
 def sales_drilldown_view(request: HttpRequest) -> HttpResponse:
     """
-    HTMX-friendly view that returns a partial rendering of orders for a given menu item within a date range.
-    Expected GET params: item, start_date, end_date, page, per_page
+    HTMX view that returns a partial table of Orders related to a given menu item in the date range.
+    Accepts GET params: start_date, end_date, item (menu item name), page
     """
-    item = request.GET.get('item')
     start_str = request.GET.get('start_date')
     end_str = request.GET.get('end_date')
+    item = request.GET.get('item')
     page = int(request.GET.get('page', 1))
     per_page = int(request.GET.get('per_page', 25))
 
@@ -96,7 +96,7 @@ def sales_drilldown_view(request: HttpRequest) -> HttpResponse:
         messages.error(request, str(e))
         orders_page = None
 
-    context = {'orders': orders_page, 'item': item}
+    context = {'orders_page': orders_page, 'item': item}
     return render(request, 'reporting/partials/sales_drilldown.html', context)
 
 @login_required

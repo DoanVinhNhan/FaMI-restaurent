@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Cập nhật Món ăn - FaMÌ{% endblock %}
+{% block title %}{% if is_combo %}Cập nhật Combo{% else %}Cập nhật Món ăn{% endif %} - FaMÌ{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -15,7 +15,9 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <h5 class="mb-3 text-secondary border-bottom pb-2">Thông tin chi tiết</h5>
+                        <h5 class="mb-3 text-secondary border-bottom pb-2">
+                            {% if is_combo %}Thông tin Combo{% else %}Thông tin chi tiết{% endif %}
+                        </h5>
 
                         {% if item_form.errors %}
                         <div class="alert alert-danger">
@@ -103,10 +105,125 @@
                             </div>
                         </div>
 
+                        {% if is_combo and component_formset %}
+                        <!-- Combo Components Section -->
+                        <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2 d-flex justify-content-between align-items-center">
+                            <span>Thành phần trong Combo</span>
+                            <button type="button" id="add-component" class="btn btn-sm btn-outline-primary">Thêm thành phần</button>
+                        </h5>
+                        <div class="bg-white border rounded p-3 mb-3">
+                            {{ component_formset.management_form }}
+                            {% if component_formset.non_form_errors %}
+                            <div class="alert alert-danger py-2">
+                                {% for err in component_formset.non_form_errors %}
+                                <div>{{ err }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%">Món</th>
+                                            <th style="width: 20%">Số lượng</th>
+                                            <th style="width: 20%">Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="component-rows">
+                                        {% for form in component_formset.forms %}
+                                        <tr>
+                                            {# Render hidden fields (id, etc.) so Django knows existing instances on POST #}
+                                            {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                            {% endfor %}
+
+                                            <td>
+                                                {{ form.item }}
+                                                <div class="text-danger small">{{ form.item.errors }}</div>
+                                            </td>
+                                            <td>
+                                                {{ form.quantity }}
+                                                <div class="text-danger small">{{ form.quantity.errors }}</div>
+                                            </td>
+                                            <td class="text-center">
+                                                {{ form.DELETE }}
+                                                <button type="button" class="btn btn-sm btn-danger remove-component">Xóa</button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <script id="empty-form-template" type="text/template">
+                                <tr>
+                                    {# Hidden fields for the empty form (will contain __prefix__) #}
+                                    {% for hidden in component_formset.empty_form.hidden_fields %}
+                                    {{ hidden }}
+                                    {% endfor %}
+
+                                    <td>
+                                        {{ component_formset.empty_form.item }}
+                                        <div class="text-danger small"></div>
+                                    </td>
+                                    <td>
+                                        {{ component_formset.empty_form.quantity }}
+                                        <div class="text-danger small"></div>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ component_formset.empty_form.DELETE }}
+                                        <button type="button" class="btn btn-sm btn-danger remove-component">Xóa</button>
+                                    </td>
+                                </tr>
+                            </script>
+
+                            <p class="text-muted small mt-2 mb-0">Thêm thành phần từng dòng bằng nút "Thêm thành phần". Xóa sẽ đánh dấu form để xoá (DELETE) và ẩn dòng, giúp tránh lỗi khi gửi formset.</p>
+                        </div>
+
+                        <script>
+                        (function(){
+                            const addBtn = document.getElementById('add-component');
+                            const tbody = document.getElementById('component-rows');
+                            const template = document.getElementById('empty-form-template').innerHTML;
+                            const totalFormsInput = document.querySelector('#id_' + '{{ component_formset.prefix }}' + '-TOTAL_FORMS');
+
+                            function bindRemove(btn){
+                                btn.addEventListener('click', function(e){
+                                    const row = e.target.closest('tr');
+                                    if(!row) return;
+                                    const delInput = row.querySelector('input[name$="-DELETE"]');
+                                    if(delInput){
+                                        if(delInput.type === 'checkbox') delInput.checked = true;
+                                        else delInput.value = 'on';
+                                    }
+                                    row.style.display = 'none';
+                                });
+                            }
+
+                            // Bind existing remove buttons
+                            document.querySelectorAll('.remove-component').forEach(bindRemove);
+
+                            addBtn.addEventListener('click', function(){
+                                let index = parseInt(totalFormsInput.value, 10);
+                                let html = template.replace(/__prefix__/g, index);
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = html;
+                                tbody.appendChild(tr);
+                                // after appending, ensure remove button works
+                                const btn = tr.querySelector('.remove-component');
+                                if(btn) bindRemove(btn);
+                                totalFormsInput.value = index + 1;
+                            });
+
+                        })();
+                        </script>
+                        {% endif %}
+
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a href="{% url 'menu:menu_list' %}" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
                             <button type="submit" class="btn btn-warning px-4">
-                                <i class="fas fa-check me-2"></i>Cập nhật
+                                <i class="fas fa-check me-2"></i>
+                                {% if is_combo %}Cập nhật Combo{% else %}Cập nhật{% endif %}
                             </button>
                         </div>
                     </form>

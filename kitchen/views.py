@@ -326,7 +326,7 @@ def menu_management_view(request: HttpRequest) -> HttpResponse:
     """
     View for Kitchen to manage "Out of Stock" items globally.
     """
-    # Simply list all active items grouped by category
+    # List items for management: include Active and Out of Stock, exclude Inactive
     items = MenuItem.objects.select_related('category').exclude(status=MenuItem.ItemStatus.INACTIVE).order_by('category__name', 'name')
     
     context = {

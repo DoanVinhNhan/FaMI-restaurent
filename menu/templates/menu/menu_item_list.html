@@ -5,14 +5,47 @@
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-utensils me-2"></i>Quản lý Thực đơn</h2>
         <div>
-            <a href="?view=active" class="btn btn-outline-primary {% if view_mode == 'active' %}active{% endif %}">Đang
-                bán</a>
-            <a href="?view=all" class="btn btn-outline-secondary {% if view_mode == 'all' %}active{% endif %}">Tất
-                cả</a>
-            <a href="{% url 'menu:menu_create' %}" class="btn btn-primary ms-2"><i class="fas fa-plus me-1"></i>Thêm Món
-                mới</a>
+            <h2 class="mb-1">
+                <i class="fas fa-utensils me-2"></i>
+                {% if is_combo_page %}Quản lý Combo{% else %}Quản lý Thực đơn{% endif %}
+            </h2>
+            <p class="text-muted small mb-0">
+                {% if is_combo_page %}
+                Danh sách các món Combo (gồm nhiều món con).
+                {% else %}
+                Danh sách món ăn & đồ uống đang kinh doanh.
+                {% endif %}
+            </p>
+        </div>
+        <div class="text-end">
+            {% if not is_combo_page %}
+            <div class="btn-group mb-2 w-100">
+                <a href="?view=active"
+                    class="btn btn-outline-primary {% if view_mode == 'active' %}active{% endif %}">Đang
+                    bán</a>
+                <a href="?view=all"
+                    class="btn btn-outline-secondary {% if view_mode == 'all' %}active{% endif %}">Tất
+                    cả</a>
+            </div>
+            {% endif %}
+            <div class="d-flex gap-2 justify-content-end">
+                <a href="{% url 'menu:menu_list' %}" class="btn btn-outline-secondary {% if not is_combo_page %}active{% endif %}">
+                    <i class="fas fa-list me-1"></i>Món lẻ
+                </a>
+                <a href="{% url 'menu:combo_list' %}" class="btn btn-outline-info {% if is_combo_page %}active{% endif %}">
+                    <i class="fas fa-layer-group me-1"></i>Combo
+                </a>
+                {% if is_combo_page %}
+                <a href="{% url 'menu:combo_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Thêm Combo
+                </a>
+                {% else %}
+                <a href="{% url 'menu:menu_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Thêm Món mới
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -43,7 +76,12 @@
                                 {% endif %}
                             </td>
                             <td>{{ item.sku }}</td>
-                            <td class="fw-bold">{{ item.name }}</td>
+                            <td class="fw-bold">
+                                {{ item.name }}
+                                {% if item.is_combo %}
+                                <span class="badge bg-info text-dark ms-1">Combo</span>
+                                {% endif %}
+                            </td>
                             <td>{{ item.category.name|default:"-" }}</td>
                             <td class="text-success fw-bold">
                                 {% if item.get_current_price %}
@@ -53,20 +91,25 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if item.status == 'ACTIVE' %}
+                                {% if item.is_active %}
                                 <span class="badge bg-success">Đang bán</span>
-                                {% elif item.status == 'OUT_OF_STOCK' %}
+                                {% elif item.is_out_of_stock %}
                                 <span class="badge bg-warning text-dark">Hết hàng</span>
                                 {% else %}
                                 <span class="badge bg-secondary">Ngừng bán</span>
                                 {% endif %}
                             </td>
                             <td class="text-end pe-4">
+                                {% if item.is_combo %}
+                                <a href="{% url 'menu:combo_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
+                                    title="Chỉnh sửa Combo"><i class="fas fa-layer-group"></i></a>
+                                {% else %}
                                 <a href="{% url 'menu:menu_item_edit' item.pk %}" class="btn btn-sm btn-outline-primary"
                                     title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
                                 <a href="{% url 'menu:recipe_manage' item.pk %}" class="btn btn-sm btn-outline-info"
                                     title="Công thức"><i class="fas fa-scroll"></i></a>
-                                {% if item.status == 'ACTIVE' %}
+                                {% endif %}
+                                {% if item.is_active %}
                                 <a href="{% url 'menu:menu_delete' item.pk %}" class="btn btn-sm btn-outline-danger"
                                     title="Ngừng bán"><i class="fas fa-ban"></i></a>
                                 {% endif %}

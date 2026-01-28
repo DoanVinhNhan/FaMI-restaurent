@@ -1,7 +1,8 @@
 import datetime
 from django import forms
 from django.utils import timezone
-from .models import MenuItem, Pricing, Category
+from django.forms import inlineformset_factory
+from .models import MenuItem, Pricing, Category, Recipe, RecipeIngredient, ComboComponent
 
 class MenuItemForm(forms.ModelForm):
     """
@@ -74,9 +75,6 @@ class PricingForm(forms.ModelForm):
         #     raise forms.ValidationError("Effective date cannot be in the past.")
         return date_val
 
-# --- Recipe Forms ---
-from .models import Recipe, RecipeIngredient
-
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
@@ -94,3 +92,86 @@ class RecipeIngredientForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.0001'}),
             'unit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. g, ml, pcs'}),
         }
+
+
+class ComboComponentForm(forms.ModelForm):
+    """
+    Form for defining a component item inside a combo.
+    """
+    class Meta:
+        model = ComboComponent
+        fields = ['item', 'quantity']
+        widgets = {
+            'item': forms.Select(attrs={'class': 'form-select'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # If this form is bound to an existing ComboComponent instance, try to exclude the parent combo
+        parent_pk = None
+        # Inline formset will set instance on the form's _meta.model_instance indirectly - safer to check instance attribute
+        if hasattr(self.instance, 'combo') and self.instance.combo:
+            parent_pk = getattr(self.instance.combo, 'pk', None)
+        # Set queryset for item to exclude parent combo item when possible
+        if parent_pk:
+            self.fields['item'].queryset = MenuItem.objects.exclude(pk=parent_pk)
+
+
+from django.forms.models import BaseInlineFormSet
+
+class BaseComboComponentFormSet(BaseInlineFormSet):
+    """Custom formset to exclude the parent combo from item choices and validate self-reference."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        parent_pk = getattr(self.instance, 'pk', None)
+        for form in self.forms:
+            # Some forms may not yet have an 'item' field if empty; guard access
+            if 'item' in form.fields:
+                if parent_pk:
+                    form.fields['item'].queryset = MenuItem.objects.exclude(pk=parent_pk)
+                else:
+                    form.fields['item'].queryset = MenuItem.objects.all()
+
+    def clean(self):
+        super().clean()
+        parent_pk = getattr(self.instance, 'pk', None)
+        seen = set()
+
+        for form in self.forms:
+            # Respect delete flags - ignore forms marked for deletion
+            delete = False
+            if hasattr(form, 'cleaned_data'):
+                delete = form.cleaned_data.get('DELETE', False)
+            if delete:
+                continue
+
+            # If form has no cleaned_data (had field errors), skip additional validation here
+            if not hasattr(form, 'cleaned_data'):
+                continue
+
+            item = form.cleaned_data.get('item')
+            # Completely empty extra forms should be ignored (no item selected)
+            if not item:
+                continue
+
+            # Prevent self-referential component
+            if parent_pk and item.pk == parent_pk:
+                raise forms.ValidationError("A combo cannot include itself as a component.")
+
+            # Prevent duplicate components within the same combo
+            if item.pk in seen:
+                raise forms.ValidationError("Duplicate components are not allowed.")
+            seen.add(item.pk)
+
+
+ComboComponentFormSet = inlineformset_factory(
+    parent_model=MenuItem,
+    model=ComboComponent,
+    fk_name='combo',
+    form=ComboComponentForm,
+    formset=BaseComboComponentFormSet,
+    # No pre-filled extras; use JS button to add rows dynamically
+    extra=0,
+    can_delete=True,
+)

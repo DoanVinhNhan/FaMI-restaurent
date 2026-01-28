@@ -11,10 +11,15 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 from .models import MenuItem, Pricing
-from .forms import MenuItemForm, PricingForm
+from .forms import (
+    MenuItemForm,
+    PricingForm,
+    ComboComponentFormSet,
+)
 
 from core.mixins import RoleRequiredMixin
 from django.contrib.auth.decorators import user_passes_test
+
 
 def is_manager(user):
     return user.is_authenticated and (user.is_manager() or user.is_superuser)
@@ -38,7 +43,7 @@ class MenuItemListView(RoleRequiredMixin, ListView):
         view_mode = self.request.GET.get('view', 'active')
         
         if view_mode == 'active':
-            return queryset.filter(status='ACTIVE') # Uppercase matching choice
+            return queryset.filter(status=MenuItem.ItemStatus.ACTIVE) # Use enum constant for clarity
         elif view_mode == 'all':
             return queryset
         return queryset
@@ -46,6 +51,28 @@ class MenuItemListView(RoleRequiredMixin, ListView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['view_mode'] = self.request.GET.get('view', 'active')
+        return context
+
+
+class ComboListView(RoleRequiredMixin, ListView):
+    """
+    List all combo items (MenuItem with is_combo=True).
+    Reuses the standard menu list template.
+    """
+    allowed_roles = ['MANAGER']
+    model = MenuItem
+    template_name = 'menu/menu_item_list.html'
+    context_object_name = 'menu_items'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('category')
+        return queryset.filter(is_combo=True)
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['view_mode'] = 'combo'
+        context['is_combo_page'] = True
         return context
 
 
@@ -93,7 +120,7 @@ def menu_item_create_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'menu/menu_item_form.html', {
         'item_form': item_form,
         'price_form': price_form,
-        'title': 'Create Menu Item'
+        'title': 'Create Menu Item',
     })
 
 
@@ -282,3 +309,139 @@ class CategoryUpdateView(RoleRequiredMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = "Update Category"
         return context
+
+
+# --- Combo Management Views ---
+from .models import Category as MenuCategory
+
+
+@login_required
+@user_passes_test(is_manager)
+def combo_create_view(request: HttpRequest) -> HttpResponse:
+    """
+    Create a new Combo MenuItem together with its initial Pricing and components.
+    Backend wiring only; templates will be enhanced in later steps.
+    """
+    if request.method == 'POST':
+        item_form = MenuItemForm(request.POST, request.FILES)
+        price_form = PricingForm(request.POST)
+        formset = ComboComponentFormSet(request.POST, instance=MenuItem())
+
+        if item_form.is_valid() and price_form.is_valid() and formset.is_valid():
+            try:
+                with transaction.atomic():
+                    menu_item = item_form.save(commit=False)
+                    menu_item.is_combo = True
+
+                    # Default category to "Combo" if not explicitly selected
+                    if not menu_item.category_id:
+                        combo_cat = MenuCategory.objects.filter(name='Combo').first()
+                        if combo_cat:
+                            menu_item.category = combo_cat
+
+                    # Populate display price from Pricing
+                    menu_item.price = price_form.cleaned_data['selling_price']
+                    menu_item.save()
+
+                    pricing = price_form.save(commit=False)
+                    pricing.menu_item = menu_item
+                    pricing.save()
+
+                    formset.instance = menu_item
+                    formset.save()
+
+                messages.success(request, f"Combo '{menu_item.name}' created successfully.")
+                return redirect('menu:menu_list')
+            except Exception as e:
+                messages.error(request, f"Error saving combo: {str(e)}")
+        else:
+            # Aggregate errors for visibility (item_form, price_form, formset)
+            error_parts = []
+            if item_form.errors:
+                error_parts.append(f"Item: {item_form.errors.as_text()}")
+            if price_form.errors:
+                error_parts.append(f"Price: {price_form.errors.as_text()}")
+            if formset.non_form_errors():
+                error_parts.append(f"Components: {formset.non_form_errors()}")
+            for idx, f in enumerate(formset.forms):
+                if f.errors:
+                    error_parts.append(f"Component {idx+1}: {f.errors.as_text()}")
+            messages.error(request, "Please correct the errors below. " + ' '.join(error_parts))
+    else:
+        item_form = MenuItemForm()
+        price_form = PricingForm(initial={'effective_date': timezone.now().date()})
+        formset = ComboComponentFormSet(instance=MenuItem())
+
+    return render(request, 'menu/menu_item_form.html', {
+        'item_form': item_form,
+        'price_form': price_form,
+        'component_formset': formset,
+        'title': 'Create Combo',
+        'is_combo': True,
+    })
+
+
+@login_required
+@user_passes_test(is_manager)
+def combo_update_view(request: HttpRequest, pk: int) -> HttpResponse:
+    """
+    Update an existing Combo MenuItem and its components.
+    Reuses pricing history behaviour from standard menu update.
+    """
+    menu_item = get_object_or_404(MenuItem, pk=pk, is_combo=True)
+
+    current_pricing = menu_item.get_current_price()
+    initial_price = current_pricing.selling_price if current_pricing else menu_item.price
+
+    if request.method == 'POST':
+        item_form = MenuItemForm(request.POST, request.FILES, instance=menu_item)
+        price_form = PricingForm(request.POST)
+        formset = ComboComponentFormSet(request.POST, instance=menu_item)
+
+        if item_form.is_valid() and price_form.is_valid() and formset.is_valid():
+            try:
+                with transaction.atomic():
+                    saved_item = item_form.save(commit=False)
+                    saved_item.is_combo = True
+                    new_price = price_form.cleaned_data['selling_price']
+
+                    if new_price != initial_price:
+                        Pricing.objects.create(
+                            menu_item=saved_item,
+                            selling_price=new_price,
+                            effective_date=timezone.now()
+                        )
+                        saved_item.price = new_price
+
+                    saved_item.save()
+                    formset.save()
+
+                messages.success(request, f"Combo '{menu_item.name}' updated successfully.")
+                return redirect('menu:menu_list')
+            except Exception as e:
+                messages.error(request, f"Error updating combo: {e}")
+        else:
+            error_parts = []
+            if item_form.errors:
+                error_parts.append(f"Item: {item_form.errors.as_text()}")
+            if price_form.errors:
+                error_parts.append(f"Price: {price_form.errors.as_text()}")
+            if formset.non_form_errors():
+                error_parts.append(f"Components: {formset.non_form_errors()}")
+            for idx, f in enumerate(formset.forms):
+                if f.errors:
+                    error_parts.append(f"Component {idx+1}: {f.errors.as_text()}")
+            messages.error(request, "Please correct the errors below. " + ' '.join(error_parts))
+    else:
+        item_form = MenuItemForm(instance=menu_item)
+        price_form = PricingForm(initial={'selling_price': initial_price, 'effective_date': timezone.now()})
+        formset = ComboComponentFormSet(instance=menu_item)
+
+    return render(request, 'menu/menu_item_edit.html', {
+        'item_form': item_form,
+        'price_form': price_form,
+        'component_formset': formset,
+        'object': menu_item,
+        'title': f'Edit Combo: {menu_item.name}',
+        'is_combo': True,
+    })

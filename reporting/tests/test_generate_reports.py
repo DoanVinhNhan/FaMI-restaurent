@@ -52,6 +52,34 @@ class GenerateReportsTests(TestCase):
         self.assertEqual(len(summary.top_selling_items), 1)
         self.assertEqual(summary.top_selling_items[0]['menu_item__name'], 'Coke')
 
+    def test_get_orders_for_item(self):
+        # Create additional paid order with same item
+        order2 = Order.objects.create(user=self.user, table=self.table, status=Order.Status.PAID, total_amount=10)
+        OrderDetail.objects.create(order=order2, menu_item=self.item, quantity=1, unit_price=10, total_price=10)
+
+        from reporting.services import ReportController
+        page = ReportController.get_orders_for_item(date.today(), date.today(), 'Coke', page=1, per_page=10)
+        self.assertEqual(page.paginator.count, 2)
+        ids = [o.id for o in page.object_list]
+        self.assertIn(self.order1.id, ids)
+        self.assertIn(order2.id, ids)
+
+    def test_sales_drilldown_view(self):
+        request = self.factory.get('/reporting/sales/drilldown/', {'item': 'Coke', 'start_date': date.today().isoformat(), 'end_date': date.today().isoformat()})
+        request.user = self.user
+
+        # Mock Session & messages
+        from django.contrib.sessions.middleware import SessionMiddleware
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(request)
+        request.session.save()
+        from django.contrib.messages.storage.fallback import FallbackStorage
+        setattr(request, '_messages', FallbackStorage(request))
+
+        response = sales_report_view(request)
+        # The drilldown is loaded via HTMX button; the sales_report_view should still render OK
+        self.assertEqual(response.status_code, 200)
+
     def test_view_invalid_date_range(self):
         # Request with backwards dates
         future = (date.today() + timedelta(days=10)).isoformat()

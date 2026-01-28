@@ -41,12 +41,12 @@ ALLOWED_HOSTS = [
     '127.0.0.1', 
     '0.0.0.0', 
     'testserver',
-    'newark-routines-ambient-editions.trycloudflare.com', # Thêm dòng này
+    'sudden-petroleum-stanley-rim.trycloudflare.com', # Thêm dòng này
 ]
 
 # 1. Thêm domain của Cloudflare vào danh sách tin cậy cho CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'https://newark-routines-ambient-editions.trycloudflare.com',
+    'https://sudden-petroleum-stanley-rim.trycloudflare.com',
 ]
 
 # 2. Đảm bảo Django hiểu rằng request đang đến qua một proxy an toàn (HTTPS)

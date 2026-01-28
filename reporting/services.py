@@ -104,6 +104,33 @@ class ReportController:
         )
 
     @staticmethod
+    def get_orders_for_item(start_date: date, end_date: date, menu_item_name: str = None, page: int = 1, per_page: int = 25):
+        """
+        Returns a paginator page of Orders which include a given menu_item_name within the date range.
+        If menu_item_name is None, returns all orders in range.
+        """
+        # Make datetimes aware
+        start_dt = timezone.make_aware(datetime.combine(start_date, time.min))
+        end_dt = timezone.make_aware(datetime.combine(end_date, time.max))
+
+        qs = Order.objects.filter(created_at__range=(start_dt, end_dt), status=Order.Status.PAID)
+
+        if menu_item_name:
+            qs = qs.filter(details__menu_item__name=menu_item_name).distinct()
+
+        qs = qs.order_by('-created_at')
+
+        # Paginate
+        from django.core.paginator import Paginator
+        paginator = Paginator(qs, per_page)
+        try:
+            page_obj = paginator.page(page)
+        except Exception:
+            page_obj = paginator.page(1)
+
+        return page_obj
+
+    @staticmethod
     def generate_inventory_variance_report(start_date: date, end_date: date) -> List[InventoryVarianceSummary]:
         """
         Generates a report on Stock Taking discrepancies.
