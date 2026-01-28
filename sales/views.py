@@ -416,15 +416,31 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
         if payment_method != 'CASH':
             received_amount = order.total_amount
 
-        from .services import PaymentController
+        from .services import PaymentController, PromotionEngine
         
         # Logic: If just applying promo (Action button), don't process payment yet
         if 'apply_promo' in request.POST:
-             # Just calculate and show new total - View logic only or dry-run?
-             # For simplicity, we just reload page with applied promo temporarily or use JS.
-             # In standard Django without JS, we might need to store promo in session or URL.
-             # Here, let's assume we process everything in one go or we would use HTMX for promo.
-             pass 
+            discount = Decimal('0.00')
+            new_total = order.total_amount
+            if promo_code:
+                discount = PromotionEngine.apply_promotion(promo_code, order)
+                if discount > 0:
+                    new_total = max(Decimal('0.00'), order.total_amount - discount)
+                    messages.info(request, f"Promotion '{promo_code}' applies. Discount: {discount}.")
+                else:
+                    messages.error(request, "Invalid or expired promo code.")
+            else:
+                messages.error(request, "No promo code provided.")
+
+            # Render payment form with preview values (do not save order)
+            return render(request, 'sales/payment_form.html', {
+                'table': table,
+                'order': order,
+                'action_type': action_type,
+                'promo_code': promo_code,
+                'discount': discount,
+                'new_total': new_total
+            })
 
         result = PaymentController.process_payment(
             order_id=order.id,

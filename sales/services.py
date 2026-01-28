@@ -120,12 +120,18 @@ class PaymentController:
         if order.status == Order.Status.PAID:
             return {'success': False, 'message': "Order is already paid."}
 
-        # 2. Apply Promotion (if any) - Assuming this is the FINAL step where we commit it
+        # 2. Apply Promotion (if any) - Calculate discount and capture promotion object
         discount = Decimal('0.00')
+        promo_obj = None
+        original_total = order.total_amount
         if promo_code:
             discount = PromotionEngine.apply_promotion(promo_code, order)
-            # Apply discount to total permanently for the invoice
-            # Note: Ideally we should track 'original_total' and 'discount_applied'
+            try:
+                promo_obj = Promotion.objects.get(promo_code=promo_code)
+            except Promotion.DoesNotExist:
+                promo_obj = None
+
+            # Apply discount to order's total for compatibility (snapshot kept in Invoice)
             if discount > 0:
                 order.total_amount -= discount
                 if order.total_amount < 0:
@@ -133,16 +139,18 @@ class PaymentController:
                 order.save()
 
         # 3. Check Payment Amount
-        final_required = order.total_amount
+        final_required = max(Decimal('0.00'), original_total - discount)
         
         if amount < final_required:
-            # Create a Failed Transaction Log
+            # Create a Failed Transaction Log (include promo info if present)
             Transaction.objects.create(
                 order=order,
                 amount=amount,
                 payment_method=method,
                 status=Transaction.PaymentStatus.FAILED,
-                reference_code=f"FAILED-{timezone.now().timestamp()}"
+                reference_code=f"FAILED-{timezone.now().timestamp()}",
+                promotion=promo_obj,
+                discount_amount=discount
             )
             return {'success': False, 'transaction_id': None, 'message': f"Insufficient payment. Required: {final_required}"}
 
@@ -160,14 +168,19 @@ class PaymentController:
             amount=amount,
             payment_method=method,
             status=Transaction.PaymentStatus.SUCCESS,
-            reference_code=gateway_ref
+            reference_code=gateway_ref,
+            promotion=promo_obj,
+            discount_amount=discount
         )
 
-        # 6. Generate Invoice
+        # 6. Generate Invoice (snapshot promotion and discount)
         Invoice.objects.create(
             order=order,
             final_total=final_required, 
-            payment_method=method
+            payment_method=method,
+            promotion=promo_obj,
+            discount_amount=discount,
+            original_total=original_total
         )
 
         # 7. Update Order Status

@@ -336,6 +336,13 @@ class Invoice(models.Model):
         help_text=_("Primary method of payment.")
     )
 
+    # Promotion snapshot fields
+    promotion = models.ForeignKey(
+        'sales.Promotion', on_delete=models.SET_NULL, null=True, blank=True, related_name='+'
+    )
+    discount_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    original_total = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
+
     class Meta:
         verbose_name = _("Invoice")
         verbose_name_plural = _("Invoices")
@@ -393,6 +400,12 @@ class Transaction(models.Model):
         null=True,
         help_text=_("External reference (e.g., Bank Ref).")
     )
+
+    # Optional: trace promotion used in this transaction
+    promotion = models.ForeignKey(
+        'sales.Promotion', on_delete=models.SET_NULL, null=True, blank=True, related_name='+'
+    )
+    discount_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
 
     class Meta:
         verbose_name = _("Transaction")

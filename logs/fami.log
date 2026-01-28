@@ -8110,3 +8110,5 @@ WARNING 2026-01-28 19:10:40,319 log Forbidden (Origin checking failed - https://
 WARNING 2026-01-28 19:10:40,320 basehttp "POST /login/ HTTP/1.1" 403 2599
 WARNING 2026-01-28 19:27:15,144 log Not Found: /favicon.ico
 WARNING 2026-01-28 19:27:15,145 basehttp "GET /favicon.ico HTTP/1.1" 404 4587
+WARNING 2026-01-28 21:24:11,421 log Not Found: /favicon.ico
+WARNING 2026-01-28 21:24:11,422 basehttp "GET /favicon.ico HTTP/1.1" 404 4556
