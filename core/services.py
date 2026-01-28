@@ -1,61 +1,80 @@
-import logging
-from typing import Any, Dict
-
-logger = logging.getLogger(__name__)
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from typing import Dict, Any
 
 class NotificationService:
     """
-    Service responsible for handling real-time notifications via WebSocket 
-    (Django Channels) or other mechanisms.
-    
-    Current implementation logs to console (Mock) but is structured for 
-    Channels integration.
+    Service to broadcast messages to WebSocket groups from synchronous code.
     """
+
+    @staticmethod
+    def send_to_group(group_name: str, message_type: str, data: Dict[str, Any]) -> None:
+        """
+        Sends a message to a specific WebSocket group.
+
+        Args:
+            group_name (str): The target group (e.g., 'kitchen', 'cashier').
+            message_type (str): The type of event (e.g., 'NEW_ORDER', 'ORDER_READY').
+            data (dict): The payload data.
+        """
+        channel_layer = get_channel_layer()
+        
+        payload = {
+            "type": message_type,
+            "data": data,
+            # "timestamp": timezone.now().isoformat() 
+        }
+
+        # The 'type' key in the group_send dictionary corresponds to the 
+        # method name in the Consumer. We defined 'broadcast_message' in consumers.py.
+        async_to_sync(channel_layer.group_send)(
+            f"notification_{group_name}",
+            {
+                "type": "broadcast_message",
+                "payload": payload
+            }
+        )
+
+    @staticmethod
+    def notify_kitchen_new_order(order_id: int, table_number: str, items: list) -> None:
+        """
+        Helper: Notify Kitchen about a new order.
+        """
+        NotificationService.send_to_group(
+            group_name='kitchen',
+            message_type='NEW_ORDER',
+            data={
+                "order_id": order_id,
+                "table": table_number,
+                "items": items
+            }
+        )
 
     @staticmethod
     def send_ready_signal(order_id: int, item_name: str) -> None:
         """
-        Notify Cashier/Waiter that an item is ready to be served.
-        
-        Args:
-            order_id (int): The ID of the order.
-            item_name (str): The name of the completed item.
+        Notify that an item is Ready (Done).
         """
-        # TODO: Replace with channel_layer.group_send for Django Channels
-        payload: Dict[str, Any] = {
-            "type": "order.ready",
-            "order_id": order_id,
-            "message": f"Item '{item_name}' for Order #{order_id} is READY."
-        }
-        logger.info(f"Broadcast to Cashier: {payload}")
-        print(f"--> [WEBSOCKET MOCK] Sending 'Ready' signal to Cashiers: {payload}")
+        NotificationService.send_to_group(
+            group_name='cashier',
+            message_type='ORDER_READY',
+            data={
+                "order_id": order_id,
+                "item_name": item_name
+            }
+        )
 
     @staticmethod
     def send_cancellation_alert(order_id: int, item_name: str, reason: str) -> None:
         """
-        Notify Cashier that an item was cancelled by the kitchen.
-        
-        Args:
-            order_id (int): The ID of the order.
-            item_name (str): The name of the item.
-            reason (str): The reason for cancellation.
+        Notify that an item was cancelled.
         """
-        payload: Dict[str, Any] = {
-            "type": "order.cancelled",
-            "order_id": order_id,
-            "message": f"Item '{item_name}' CANCELLED. Reason: {reason}"
-        }
-        logger.warning(f"Broadcast to Cashier: {payload}")
-        print(f"--> [WEBSOCKET MOCK] Sending 'Cancel' alert to Cashiers: {payload}")
-
-    @staticmethod
-    def notify_kitchen_new_ticket(order_id: int) -> None:
-        """
-        Notify Kitchen screens that a new ticket has arrived.
-        """
-        payload: Dict[str, Any] = {
-            "type": "kitchen.new_ticket",
-            "order_id": order_id
-        }
-        logger.info(f"Broadcast to Kitchen: {payload}")
-        print(f"--> [WEBSOCKET MOCK] New Ticket Alert for Kitchen: {payload}")
+        NotificationService.send_to_group(
+            group_name='cashier',
+            message_type='ORDER_CANCELLED',
+            data={
+                "order_id": order_id,
+                "item_name": item_name,
+                "reason": reason
+            }
+        )

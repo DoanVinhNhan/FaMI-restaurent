@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from sales.models import Order, OrderDetail
-from menu.models import MenuItem
+from menu.models import MenuItem, Category
 from decimal import Decimal
 
 User = get_user_model()
@@ -16,12 +16,15 @@ class ReportViewsTestCase(TestCase):
         self.client = Client()
         self.client.login(username='manager_viz', password='password123')
 
+        # Create Category
+        self.category = Category.objects.create(name="Food")
+
         # Create Data
-        self.item1 = MenuItem.objects.create(name="BurgerViz", price=50000, status='ACTIVE')
-        self.item2 = MenuItem.objects.create(name="CokeViz", price=10000, status='ACTIVE')
+        self.item1 = MenuItem.objects.create(name="BurgerViz", price=50000, status='ACTIVE', category=self.category, sku="BV01")
+        self.item2 = MenuItem.objects.create(name="CokeViz", price=10000, status='ACTIVE', category=self.category, sku="CV01")
 
         # Create Order 1 (Today)
-        order1 = Order.objects.create(total_amount=Decimal('110000.00'), status='Paid', created_at=timezone.now())
+        order1 = Order.objects.create(total_amount=Decimal('110000.00'), status='Paid', created_at=timezone.now(), user=self.user)
         OrderDetail.objects.create(order=order1, menu_item=self.item1, quantity=2, unit_price=Decimal('50000.00'), total_price=Decimal('100000.00')) 
         OrderDetail.objects.create(order=order1, menu_item=self.item2, quantity=1, unit_price=Decimal('10000.00'), total_price=Decimal('10000.00')) 
         

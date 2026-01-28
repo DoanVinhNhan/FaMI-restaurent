@@ -48,6 +48,7 @@ def menu_item_create_view(request: HttpRequest) -> HttpResponse:
     Uses function-based view to handle two forms easily within a transaction.
     """
     if request.method == 'POST':
+        print(f"DEBUG: Processing Order POST. User: {request.user}")
         item_form = MenuItemForm(request.POST, request.FILES)
         price_form = PricingForm(request.POST)
 
@@ -103,6 +104,7 @@ class MenuItemUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
+@login_required
 def menu_item_soft_delete_view(request: HttpRequest, pk: int) -> HttpResponse:
     """
     UC1: Soft Delete / Deactivate Logic.

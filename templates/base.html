@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FaMÌ Admin{% endblock %}</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for Icons -->
@@ -17,7 +18,7 @@
             flex-direction: column;
             background-color: #f4f6f9;
         }
-        
+
         .wrapper {
             display: flex;
             width: 100%;
@@ -61,7 +62,7 @@
             background: #34495e;
         }
 
-        #sidebar ul li.active > a {
+        #sidebar ul li.active>a {
             color: #fff;
             background: #2980b9;
         }
@@ -88,6 +89,7 @@
             #sidebar {
                 margin-left: -250px;
             }
+
             #sidebar.active {
                 margin-left: 0;
             }
@@ -95,100 +97,103 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-<div class="wrapper">
-    <!-- Sidebar -->
-    {% if user.is_authenticated %}
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3><i class="fas fa-utensils me-2"></i>FaMÌ POS</h3>
-        </div>
-
-        <ul class="list-unstyled components">
-            <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                <a href="{% url 'core:dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-            </li>
-            <!-- Placeholders for future modules -->
-            <li>
-                <a href="#"><i class="fas fa-book-open me-2"></i>Menu</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-boxes me-2"></i>Kho (Inventory)</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-cash-register me-2"></i>Bán hàng (Sales)</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-fire me-2"></i>Bếp (KDS)</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-chart-line me-2"></i>Báo cáo</a>
-            </li>
-             <li>
-                <a href="#"><i class="fas fa-cogs me-2"></i>Hệ thống</a>
-            </li>
-        </ul>
-    </nav>
-    {% endif %}
-
-    <!-- Page Content -->
-    <div id="content">
+    <div class="wrapper">
+        <!-- Sidebar -->
         {% if user.is_authenticated %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <button type="button" id="sidebarCollapse" class="btn btn-info text-white">
-                    <i class="fas fa-align-left"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <span class="nav-link">Xin chào, <strong>{{ user.username }}</strong> ({{ user.role }})</span>
-                        </li>
-                        <li class="nav-item">
-                            <form action="{% url 'core:logout' %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm ms-2">
-                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-utensils me-2"></i>FaMÌ POS</h3>
             </div>
+
+            <ul class="list-unstyled components">
+                <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'core:dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                </li>
+                <!-- Functional Modules -->
+                <li>
+                <a href="{% url 'menu:menu_list' %}"><i class="fas fa-book-open me-2"></i>Menu</a>
+            </li>
+                <li>
+                    <a href="{% url 'inventory:ingredient_list' %}"><i class="fas fa-boxes me-2"></i>Kho (Inventory)</a>
+                </li>
+                <li>
+                    <a href="{% url 'sales:pos_index' %}"><i class="fas fa-cash-register me-2"></i>Bán hàng (Sales)</a>
+                </li>
+                <li>
+                    <a href="{% url 'kitchen:kds_board' %}"><i class="fas fa-fire me-2"></i>Bếp (KDS)</a>
+                </li>
+                <li>
+                    <a href="{% url 'reporting:dashboard' %}"><i class="fas fa-chart-line me-2"></i>Báo cáo</a>
+                </li>
+                <li>
+                    <a href="/admin/"><i class="fas fa-cogs me-2"></i>Hệ thống</a>
+                </li>
+            </ul>
         </nav>
         {% endif %}
 
-        <div class="container-fluid">
-            <!-- Alert Messages -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <!-- Page Content -->
+        <div id="content">
+            {% if user.is_authenticated %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info text-white">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <span class="nav-link">Xin chào, <strong>{{ user.username }}</strong> ({{ user.role
+                                    }})</span>
+                            </li>
+                            <li class="nav-item">
+                                <form action="{% url 'core:logout' %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm ms-2">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
-                {% endfor %}
+                </div>
+            </nav>
             {% endif %}
 
-            {% block content %}{% endblock %}
+            <div class="container-fluid">
+                <!-- Alert Messages -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap 5 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Simple Sidebar Toggle Logic
-    document.addEventListener("DOMContentLoaded", function () {
-        const sidebarCollapse = document.getElementById('sidebarCollapse');
-        const sidebar = document.getElementById('sidebar');
-        if (sidebarCollapse) {
-            sidebarCollapse.addEventListener('click', function () {
-                sidebar.classList.toggle('active');
-            });
-        }
-    });
-</script>
-{% block extra_js %}{% endblock %}
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple Sidebar Toggle Logic
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebarCollapse) {
+                sidebarCollapse.addEventListener('click', function () {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
+
 </html>

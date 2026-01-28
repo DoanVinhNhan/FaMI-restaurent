@@ -30,3 +30,1422 @@ Traceback (most recent call last):
     raise DisallowedHost(msg)
 django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
 WARNING 2026-01-28 00:14:18,284 log Bad Request: /dashboard/
+WARNING 2026-01-28 01:17:46,379 log Not Found: /favicon.ico
+WARNING 2026-01-28 01:17:46,379 basehttp "GET /favicon.ico HTTP/1.1" 404 3324
+WARNING 2026-01-28 01:24:50,078 log Not Found: /dashboard/inventory
+WARNING 2026-01-28 01:24:50,079 basehttp "GET /dashboard/inventory HTTP/1.1" 404 3348
+WARNING 2026-01-28 01:25:01,879 log Not Found: /dashboard/inventory
+WARNING 2026-01-28 01:25:01,880 basehttp "GET /dashboard/inventory HTTP/1.1" 404 3348
+WARNING 2026-01-28 01:25:36,449 log Not Found: /inventory
+WARNING 2026-01-28 01:25:36,449 basehttp "GET /inventory HTTP/1.1" 404 3318
+WARNING 2026-01-28 01:25:41,824 log Not Found: /inventory/
+WARNING 2026-01-28 01:25:41,825 basehttp "GET /inventory/ HTTP/1.1" 404 5213
+ERROR 2026-01-28 01:26:01,257 log Internal Server Error: /menu/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 861, in do_for
+    nodelist_loop = parser.parse(
+                    ^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 961, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 481, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'floatform'
+ERROR 2026-01-28 01:26:01,261 basehttp "GET /menu/ HTTP/1.1" 500 277937
+WARNING 2026-01-28 01:26:10,653 log Not Found: /sales
+WARNING 2026-01-28 01:26:10,654 basehttp "GET /sales HTTP/1.1" 404 3306
+WARNING 2026-01-28 01:26:13,868 log Not Found: /sales/
+WARNING 2026-01-28 01:26:13,869 basehttp "GET /sales/ HTTP/1.1" 404 5038
+WARNING 2026-01-28 01:26:20,931 log Not Found: /kitchen/
+WARNING 2026-01-28 01:26:20,932 basehttp "GET /kitchen/ HTTP/1.1" 404 4186
+ERROR 2026-01-28 10:19:04,665 log Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/test/utils.py", line 111, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/test/utils.py", line 111, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'menu_item_list' not found. 'menu_item_list' is not a valid view function or pattern name.
+ERROR 2026-01-28 10:19:39,133 log Internal Server Error: /inventory/ingredients/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 861, in do_for
+    nodelist_loop = parser.parse(
+                    ^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 481, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'floatform'
+ERROR 2026-01-28 10:20:21,844 log Internal Server Error: /menu/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 861, in do_for
+    nodelist_loop = parser.parse(
+                    ^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 961, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 481, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'floatform'
+ERROR 2026-01-28 10:25:17,057 log Internal Server Error: /admin/core/user/add/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 837, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/forms/models.py", line 652, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/forms/models.py", line 332, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (confirm_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/views/decorators/debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 149, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1945, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1804, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1839, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 839, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (confirm_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+ERROR 2026-01-28 10:25:17,061 basehttp "GET /admin/core/user/add/ HTTP/1.1" 500 189807
+WARNING 2026-01-28 10:27:41,741 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:27:41,741 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:27:41,742 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:27:43,162 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:27:43,162 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:27:43,163 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:27:44,777 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:27:44,778 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:27:44,778 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:27:45,361 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:27:45,362 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:27:45,362 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:30:07,400 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:30:07,401 log Method Not Allowed: /logout/
+ERROR 2026-01-28 10:30:07,438 log Internal Server Error: /inventory/dashboard/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/inventory/views.py", line 65, in inventory_dashboard
+    return render(request, 'inventory/dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: inventory/dashboard.html
+ERROR 2026-01-28 10:30:07,448 log Internal Server Error: /inventory/items/27/adjust/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/inventory/views.py", line 96, in adjust_stock
+    return render(request, 'inventory/adjust_stock.html', {'item': item})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: inventory/adjust_stock.html
+ERROR 2026-01-28 10:30:07,460 log Internal Server Error: /inventory/logs/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/inventory/views.py", line 101, in inventory_logs
+    return render(request, 'inventory/logs.html', {'logs': logs})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: inventory/logs.html
+WARNING 2026-01-28 10:30:07,500 log Method Not Allowed (GET): /sales/pos/table/1/add/4/
+WARNING 2026-01-28 10:30:07,500 log Method Not Allowed (GET): /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:30:07,501 log Method Not Allowed: /sales/api/sync/orders/
+WARNING 2026-01-28 10:30:07,512 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:30:07,512 log Bad Request: /reports/inventory/
+WARNING 2026-01-28 10:30:07,513 log Bad Request: /reports/waste/
+WARNING 2026-01-28 10:30:52,530 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:30:52,530 log Method Not Allowed: /logout/
+WARNING 2026-01-28 10:30:52,607 log Method Not Allowed (GET): /sales/pos/table/1/add/4/
+WARNING 2026-01-28 10:30:52,608 log Method Not Allowed (GET): /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:30:52,609 log Method Not Allowed: /sales/api/sync/orders/
+WARNING 2026-01-28 10:30:52,621 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:30:52,622 log Bad Request: /reports/inventory/
+WARNING 2026-01-28 10:30:52,623 log Bad Request: /reports/waste/
+WARNING 2026-01-28 10:31:08,328 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:31:08,328 log Method Not Allowed: /logout/
+WARNING 2026-01-28 10:31:08,390 log Method Not Allowed (GET): /sales/pos/table/1/add/4/
+WARNING 2026-01-28 10:31:08,391 log Method Not Allowed (GET): /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:31:08,392 log Method Not Allowed: /sales/api/sync/orders/
+WARNING 2026-01-28 10:31:08,403 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:31:08,404 log Bad Request: /reports/inventory/
+WARNING 2026-01-28 10:31:08,405 log Bad Request: /reports/waste/
+WARNING 2026-01-28 10:32:54,529 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:32:54,530 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 10:32:57,027 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:32:57,028 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 10:33:37,334 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:33:37,334 log Method Not Allowed: /logout/
+WARNING 2026-01-28 10:33:37,402 log Method Not Allowed (GET): /sales/pos/table/1/add/4/
+WARNING 2026-01-28 10:33:37,403 log Method Not Allowed (GET): /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:33:37,404 log Method Not Allowed: /sales/api/sync/orders/
+WARNING 2026-01-28 10:33:37,415 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:33:37,416 log Bad Request: /reports/inventory/
+WARNING 2026-01-28 10:33:37,417 log Bad Request: /reports/waste/
+WARNING 2026-01-28 10:34:28,508 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:34:28,509 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 10:36:04,362 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:36:04,363 log Method Not Allowed: /logout/
+WARNING 2026-01-28 10:36:04,436 log Method Not Allowed (GET): /sales/pos/table/1/add/4/
+WARNING 2026-01-28 10:36:04,437 log Method Not Allowed (GET): /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:36:04,438 log Method Not Allowed: /sales/api/sync/orders/
+WARNING 2026-01-28 10:36:04,451 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:36:04,451 log Bad Request: /reports/inventory/
+WARNING 2026-01-28 10:36:04,452 log Bad Request: /reports/waste/
+WARNING 2026-01-28 10:36:52,987 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:36:52,987 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:36:52,987 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:36:54,187 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:36:54,188 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:36:54,188 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:36:54,671 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:36:54,671 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:36:54,672 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:36:54,845 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:36:54,846 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:36:54,846 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:39:11,517 base Method Not Allowed (GET): /logout/
+WARNING 2026-01-28 10:39:11,517 log Method Not Allowed: /logout/
+WARNING 2026-01-28 10:39:11,610 log Bad Request: /reports/sales/
+WARNING 2026-01-28 10:39:41,529 log Forbidden: /sales/api/sync/orders/
+WARNING 2026-01-28 10:39:41,530 log Forbidden: /kitchen/api/dashboard/
+WARNING 2026-01-28 10:40:54,659 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:40:54,660 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:40:54,660 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:40:55,156 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:40:55,157 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:40:55,157 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:40:55,414 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 10:40:55,415 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 10:40:55,415 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 10:41:36,921 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:41:36,922 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 10:43:54,354 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:43:54,354 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+ERROR 2026-01-28 10:45:14,710 log Internal Server Error: /admin/core/user/add/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 837, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/forms/models.py", line 652, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/forms/models.py", line 332, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (confirm_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 716, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 240, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/views/decorators/debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 149, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1945, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/utils/decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1804, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1839, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 839, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (confirm_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+ERROR 2026-01-28 10:45:14,713 basehttp "GET /admin/core/user/add/ HTTP/1.1" 500 189805
+WARNING 2026-01-28 10:58:35,772 log Not Found: /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:58:56,814 log Not Found: /sales/pos/table/1/submit/
+WARNING 2026-01-28 10:59:54,412 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 10:59:54,412 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+ERROR 2026-01-28 11:05:19,662 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:05:19,664 basehttp "GET / HTTP/1.1" 500 219789
+ERROR 2026-01-28 11:05:20,008 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:05:20,009 basehttp "GET / HTTP/1.1" 500 219645
+ERROR 2026-01-28 11:05:23,782 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:05:23,783 basehttp "GET / HTTP/1.1" 500 219645
+ERROR 2026-01-28 11:05:26,350 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:05:26,351 basehttp "GET / HTTP/1.1" 500 219645
+ERROR 2026-01-28 11:07:53,356 log Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:07:53,383 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1034, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'humanize'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1096, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/defaulttags.py", line 1036, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'humanize' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+rest_framework
+static
+tz
+ERROR 2026-01-28 11:08:33,511 log Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 481, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'floatform'
+ERROR 2026-01-28 11:08:33,539 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader.py", line 42, in select_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/backends/django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 510, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 481, in parse
+    raise self.error(token, e)
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/template/base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'floatform'
+WARNING 2026-01-28 11:09:38,037 log Method Not Allowed (GET): /kitchen/item/1/update/
+WARNING 2026-01-28 11:10:15,798 log Method Not Allowed (GET): /kitchen/item/1/update/
+WARNING 2026-01-28 11:10:35,541 log Method Not Allowed (GET): /kitchen/item/1/update/
+WARNING 2026-01-28 11:10:56,959 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 11:10:56,959 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:10:58,522 log Forbidden (CSRF token missing.): /kitchen/item/3315/update/
+WARNING 2026-01-28 11:10:58,522 basehttp "POST /kitchen/item/3315/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:10:58,688 log Forbidden (CSRF token missing.): /kitchen/item/3315/update/
+WARNING 2026-01-28 11:10:58,688 basehttp "POST /kitchen/item/3315/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:10:58,855 log Forbidden (CSRF token missing.): /kitchen/item/3315/update/
+WARNING 2026-01-28 11:10:58,855 basehttp "POST /kitchen/item/3315/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:10:59,088 log Forbidden (CSRF token missing.): /kitchen/item/3315/update/
+WARNING 2026-01-28 11:10:59,089 basehttp "POST /kitchen/item/3315/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:14:06,043 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 11:14:06,044 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+ERROR 2026-01-28 11:18:15,997 log Internal Server Error: /kitchen/item/1/update/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/kitchen/views.py", line 127, in update_item_status
+    KitchenController.update_item_status(
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/kitchen/services.py", line 58, in update_item_status
+    NotificationService.send_ready_signal(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'NotificationService' has no attribute 'send_ready_signal'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/kitchen/views.py", line 134, in update_item_status
+    except ValidationError as e:
+           ^^^^^^^^^^^^^^^
+NameError: name 'ValidationError' is not defined
+WARNING 2026-01-28 11:22:22,459 log Forbidden: /sales/api/orders/create/
+ERROR 2026-01-28 11:22:45,828 log Internal Server Error: /sales/pos/table/20/pay/
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/sales/views.py", line 341, in process_payment
+    received_amount = Decimal(request.POST.get('received_amount', 0))
+                      ^^^^^^^
+NameError: name 'Decimal' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/doanvinhnhan/Downloads/XYZ/Báo cáo CK/fami_backend/sales/views.py", line 343, in process_payment
+    received_amount = Decimal(0)
+                      ^^^^^^^
+NameError: name 'Decimal' is not defined
+WARNING 2026-01-28 11:23:36,282 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 11:23:36,283 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:23:37,977 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 11:23:37,978 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:23:38,160 log Forbidden (CSRF token missing.): /kitchen/item/3313/update/
+WARNING 2026-01-28 11:23:38,161 basehttp "POST /kitchen/item/3313/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:23:39,828 log Forbidden (CSRF token missing.): /kitchen/item/3315/update/
+WARNING 2026-01-28 11:23:39,829 basehttp "POST /kitchen/item/3315/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:23:40,559 log Forbidden (CSRF token missing.): /kitchen/item/3316/update/
+WARNING 2026-01-28 11:23:40,559 basehttp "POST /kitchen/item/3316/update/ HTTP/1.1" 403 2505
+WARNING 2026-01-28 11:26:32,559 log Not Found: /sales/pos/table/1/submit/
+WARNING 2026-01-28 11:26:32,560 basehttp "POST /sales/pos/table/1/submit/ HTTP/1.1" 404 5041
+WARNING 2026-01-28 11:28:22,771 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:28:22,773 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:28:22,773 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 11:28:24,424 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:28:24,425 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:28:24,426 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 11:28:41,883 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:28:41,883 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:28:41,883 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 11:28:42,293 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:28:42,294 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:28:42,294 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 11:28:43,355 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:28:43,356 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:28:43,356 basehttp "GET /admin/logout/ HTTP/1.1" 405 0
+WARNING 2026-01-28 11:46:33,862 base Method Not Allowed (GET): /admin/logout/
+WARNING 2026-01-28 11:46:33,862 log Method Not Allowed: /admin/logout/
+WARNING 2026-01-28 11:46:33,863 basehttp "GET /admin/logout/ HTTP/1.1" 405 0

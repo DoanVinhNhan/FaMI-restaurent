@@ -50,7 +50,7 @@
                         <td class="ps-4 fw-bold text-primary">{{ ingredient.sku }}</td>
                         <td>{{ ingredient.name }}</td>
                         <td><span class="badge bg-info text-dark">{{ ingredient.unit }}</span></td>
-                        <td>{{ ingredient.cost_per_unit|floatform:2 }} ₫</td>
+                        <td>{{ ingredient.cost_per_unit }} ₫</td>
                         <td class="text-center">{{ ingredient.alert_threshold }}</td>
                         <td class="text-end pe-4">
                             <a href="{% url 'inventory:ingredient_edit' ingredient.pk %}"

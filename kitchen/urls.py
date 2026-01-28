@@ -7,8 +7,10 @@ urlpatterns = [
     # The main KDS Board view
     path('board/', views.kds_board_view, name='kds_board'),
     
-    # Endpoint for status updates (Legacy/HTMX)
+    # Endpoint for status updates (HTMX)
     path('item/<int:detail_id>/update/', views.update_item_status, name='update_item_status'),
+    path('item/<int:detail_id>/cancel/', views.cancel_item, name='cancel_item'),
+    path('item/<int:detail_id>/undo/', views.undo_item_status, name='undo_item'),
     
     # DRF API Endpoints
     path('api/dashboard/', views.KitchenDashboardView.as_view(), name='api_dashboard'),

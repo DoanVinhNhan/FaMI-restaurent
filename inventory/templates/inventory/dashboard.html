@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Dashboard - FaMÌ{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-secondary mb-0">
+            <i class="fas fa-boxes text-primary me-2"></i>Inventory Overview
+        </h2>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-info text-white shadow-sm">
+            <div class="card-body">
+                <h4>Total Items</h4>
+                <h2 class="display-4 fw-bold">{{ total_items }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card {% if low_stock_count > 0 %}bg-danger{% else %}bg-success{% endif %} text-white shadow-sm">
+            <div class="card-body">
+                <h4>Low Stock Alerts</h4>
+                <h2 class="display-4 fw-bold">{{ low_stock_count }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0">Current Stock Levels</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Item Name</th>
+                        <th>SKU</th>
+                        <th>Unit</th>
+                        <th>On Hand</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory_items %}
+                    <tr class="{% if item.is_low_stock %}table-danger{% endif %}">
+                        <td class="ps-4 fw-bold">{{ item.ingredient.name }}</td>
+                        <td>{{ item.ingredient.sku }}</td>
+                        <td>{{ item.ingredient.unit }}</td>
+                        <td>{{ item.quantity_on_hand }}</td>
+                        <td>
+                            {% if item.is_low_stock %}
+                            <span class="badge bg-danger">Low Stock</span>
+                            {% else %}
+                            <span class="badge bg-success">OK</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'inventory:adjust_stock' item.pk %}" class="btn btn-sm btn-outline-primary">
+                                Adjust
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">No inventory items found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -39,9 +39,22 @@
         {% if current_order and current_order.details.exists %}
         <form action="{% url 'sales:pos_submit_order' table.table_id %}" method="POST">
             {% csrf_token %}
+
+            {% if current_order.status == 'Cooking' %}
+            <div class="alert alert-warning py-2 mb-2 text-center">
+                <small><i class="bi bi-fire me-1"></i>Đang chế biến</small>
+            </div>
+            <!-- Pay Button -->
+            <a href="{% url 'sales:process_payment' table.table_id %}" class="btn btn-primary btn-lg w-100">
+                <i class="bi bi-credit-card me-2"></i>Thanh toán
+            </a>
+
+            {% else %}
+            <!-- Submit Button (Pending) -->
             <button type="submit" class="btn btn-success btn-lg w-100">
                 Gửi xuống Bếp <i class="bi bi-arrow-right ms-2"></i>
             </button>
+            {% endif %}
         </form>
         {% else %}
         <button class="btn btn-secondary btn-lg w-100" disabled>

@@ -100,3 +100,65 @@ class WasteService:
         )
         
         return report
+
+class InventoryService:
+    @staticmethod
+    def deduct_for_order(order):
+        """
+        Deducts inventory based on the items in the paid order.
+        Assumes BOM/Recipe logic.
+        """
+        # Avoid circular imports inside method if needed, or rely on top-level
+        from sales.models import OrderDetail
+        
+        # Prefetch to minimize queries
+        details = OrderDetail.objects.filter(order=order).select_related('menu_item', 'menu_item__recipe')
+        
+        for detail in details:
+            menu_item = detail.menu_item
+            if not hasattr(menu_item, 'recipe'):
+                continue
+                
+            recipe = menu_item.recipe
+            # access ingredients through RecipeIngredient related_name='ingredients' (from Recipe model)
+            # Actually RecipeIngredient has recipe=ForeignKey(Recipe, related_name='ingredients')
+            
+            for component in recipe.ingredients.all():
+                # component is RecipeIngredient
+                # total quantity needed = order_qty * component_qty_per_unit
+                total_needed = Decimal(detail.quantity) * component.quantity
+                
+                # Fetch Inventory Item
+                # We use get_or_create to be safe, though ideally it should exist
+                inv_item, _ = InventoryItem.objects.get_or_create(ingredient=component.ingredient)
+                inv_item.quantity_on_hand -= total_needed
+                inv_item.save()
+
+    @staticmethod
+    def check_availability(menu_item, quantity: int) -> bool:
+        """
+        Checks if there is enough inventory to fulfill the order for a specific menu item.
+        Returns True if available, False otherwise.
+        """
+        if not hasattr(menu_item, 'recipe'):
+            # If no recipe, we assume it's always available (or handle differently)
+            # For strict control, maybe return False. But for now, True.
+            return True
+            
+        recipe = menu_item.recipe
+        qty_decimal = Decimal(quantity)
+        
+        for component in recipe.ingredients.all():
+            required_qty = component.quantity * qty_decimal
+            
+            try:
+                inv_item = InventoryItem.objects.get(ingredient=component.ingredient)
+                if inv_item.quantity_on_hand < required_qty:
+                    return False
+            except InventoryItem.DoesNotExist:
+                # If ingredient not tracked in inventory, assume 0 or treat as critical missing
+                return False
+                
+        return True
+
+

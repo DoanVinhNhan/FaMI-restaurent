@@ -1,4 +1,6 @@
 from django.urls import path
+from .views import SyncOfflineOrdersView
+from .api.views import CreateThirdPartyOrderView
 from . import views
 
 app_name = 'sales'
@@ -19,4 +21,11 @@ urlpatterns = [
     
     # Submit Action
     path('pos/table/<int:table_id>/submit/', views.submit_order, name='pos_submit_order'),
+    path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
+    path('pos/table/<int:table_id>/pay/', views.process_payment, name='process_payment'),
+    
+    
+    # API Endpoints
+    path('api/sync/orders/', SyncOfflineOrdersView.as_view(), name='sync-offline-orders'),
+    path('api/orders/create/', CreateThirdPartyOrderView.as_view(), name='api_create_order'),
 ]

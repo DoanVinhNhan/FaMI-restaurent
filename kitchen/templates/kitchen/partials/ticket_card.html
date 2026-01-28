@@ -17,17 +17,36 @@
                 </div>
 
                 <!-- Status Action Button -->
-                <div class="ms-2">
+                <div class="ms-2 d-flex gap-1">
                     {% if item.status == 'Pending' %}
                     <button class="btn btn-sm btn-outline-primary"
                         hx-post="{% url 'kitchen:update_item_status' item.id %}" hx-vals='{"next_status": "Cooking"}'
                         hx-target="#kds-board-container" hx-swap="innerHTML">
                         Cook
                     </button>
+                    <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'kitchen:cancel_item' item.id %}"
+                        hx-prompt="Reason for cancellation?" hx-vals='{"reason": prompt_value}'
+                        hx-target="#kds-board-container" hx-swap="innerHTML">
+                        <i class="bi bi-x"></i>
+                    </button>
                     {% elif item.status == 'Cooking' %}
                     <button class="btn btn-sm btn-success" hx-post="{% url 'kitchen:update_item_status' item.id %}"
-                        hx-vals='{"next_status": "Paid"}' hx-target="#kds-board-container" hx-swap="innerHTML">
-                        Done
+                        hx-vals='{"next_status": "Ready"}' hx-target="#kds-board-container" hx-swap="innerHTML">
+                        Ready
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" hx-post="{% url 'kitchen:undo_item' item.id %}"
+                        hx-target="#kds-board-container" hx-swap="innerHTML" title="Undo">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                    {% elif item.status == 'Ready' %}
+                    <button class="btn btn-sm btn-info text-white"
+                        hx-post="{% url 'kitchen:update_item_status' item.id %}" hx-vals='{"next_status": "Served"}'
+                        hx-target="#kds-board-container" hx-swap="innerHTML">
+                        Serve
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" hx-post="{% url 'kitchen:undo_item' item.id %}"
+                        hx-target="#kds-board-container" hx-swap="innerHTML" title="Undo">
+                        <i class="bi bi-arrow-counterclockwise"></i>
                     </button>
                     {% endif %}
                 </div>

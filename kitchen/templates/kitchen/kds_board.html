@@ -16,7 +16,8 @@
         The hx-get attribute sets up polling.
         hx-trigger="every 10s" fires the request repeatedly.
     -->
-    <div id="kds-board-container" hx-get="{% url 'kitchen:kds_board' %}" hx-trigger="every 10s" hx-swap="innerHTML">
+    <div id="kds-board-container" hx-get="{% url 'kitchen:kds_board' %}" hx-trigger="every 10s" hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
         <!-- Load initial content -->
         {% include "kitchen/partials/board_content.html" %}
@@ -30,8 +31,6 @@
     document.getElementById('autoRefresh').addEventListener('change', function () {
         var container = document.getElementById('kds-board-container');
         if (this.checked) {
-            htmx.process(container); // Re-enabling requires re-processing or logic adjustment
-            // For simple toggle, reloading page is easiest or toggling hx-trigger attribute
             container.setAttribute('hx-trigger', 'every 10s');
         } else {
             container.setAttribute('hx-trigger', 'none');

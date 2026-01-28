@@ -1,0 +1,131 @@
+{% extends "sales/pos_base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success text-white py-3 rounded-top-4">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-wallet2 me-2"></i>Thanh toán - Bàn {{ table.table_name }}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Bill Summary -->
+                    <div class="text-center mb-4 p-3 bg-light rounded-3">
+                        <small class="text-uppercase tracking-wide text-muted">Tổng thành tiền</small>
+                        <h1 class="display-4 fw-bold text-primary mb-0">${{ order.total_amount }}</h1>
+                    </div>
+
+                    <form method="post" id="paymentForm">
+                        {% csrf_token %}
+
+                        <!-- Payment Method -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Phương thức thanh toán</label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="radio" class="btn-check" name="payment_method" id="method_cash"
+                                        value="CASH" checked>
+                                    <label class="btn btn-outline-success w-100 py-3" for="method_cash">
+                                        <i class="bi bi-cash fs-4 d-block"></i> Tiền mặt
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="radio" class="btn-check" name="payment_method" id="method_card"
+                                        value="CARD">
+                                    <label class="btn btn-outline-primary w-100 py-3" for="method_card">
+                                        <i class="bi bi-credit-card fs-4 d-block"></i> Thẻ
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="radio" class="btn-check" name="payment_method" id="method_qr"
+                                        value="QR">
+                                    <label class="btn btn-outline-dark w-100 py-3" for="method_qr">
+                                        <i class="bi bi-qr-code fs-4 d-block"></i> QR Code
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cash Specific Inputs -->
+                        <div id="cash-section">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Khách đưa</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" class="form-control fw-bold text-end"
+                                        name="received_amount" id="received_amount" value="{{ order.total_amount }}"
+                                        min="{{ order.total_amount }}">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+                                <span class="text-secondary">Tiền thừa:</span>
+                                <span class="fs-4 fw-bold text-success" id="change_amount">$0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Promotion Code -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mã khuyến mãi (Nếu có)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-ticket-perforated"></i></span>
+                                <input type="text" class="form-control" name="promo_code"
+                                    placeholder="NHAP MA GIAM GIA">
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit"
+                                class="btn btn-success btn-lg py-3 rounded-pill fw-bold shadow-sm hover-elevate">
+                                <i class="bi bi-check-circle-fill me-2"></i>Xác nhận Thanh toán
+                            </button>
+                            <a href="{% url 'sales:pos_index' %}"
+                                class="btn btn-light btn-lg rounded-pill text-secondary">
+                                Quay lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const total = parseFloat("{{ order.total_amount }}");
+        const receivedInput = document.getElementById('received_amount');
+        const changeDisplay = document.getElementById('change_amount');
+        const methodRadios = document.querySelectorAll('input[name="payment_method"]');
+        const cashSection = document.getElementById('cash-section');
+
+        function updateChange() {
+            const received = parseFloat(receivedInput.value) || 0;
+            const change = Math.max(0, received - total);
+            changeDisplay.textContent = '$' + change.toFixed(2);
+        }
+
+        function toggleCashSection() {
+            const selected = document.querySelector('input[name="payment_method"]:checked').value;
+            if (selected === 'CASH') {
+                cashSection.style.display = 'block';
+                // Auto fill total for quick pay
+                if (!receivedInput.value || receivedInput.value == 0) receivedInput.value = total;
+            } else {
+                cashSection.style.display = 'none';
+                // For card/QR, imply exact amount
+                receivedInput.value = total;
+            }
+        }
+
+        receivedInput.addEventListener('input', updateChange);
+        methodRadios.forEach(radio => radio.addEventListener('change', toggleCashSection));
+
+        // Initial run
+        updateChange();
+        toggleCashSection();
+    });
+</script>
+{% endblock %}

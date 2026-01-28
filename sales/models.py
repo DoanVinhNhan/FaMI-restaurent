@@ -163,6 +163,8 @@ class Order(models.Model):
     class Status(models.TextChoices):
         PENDING = 'Pending', _('Pending')       # Order created
         COOKING = 'Cooking', _('Cooking')       # Sent to kitchen
+        READY = 'Ready', _('Ready')             # Ready to serve
+        SERVED = 'Served', _('Served')          # Served to customer
         PAID = 'Paid', _('Paid')                # Payment completed
         CANCELLED = 'Cancelled', _('Cancelled') # Order voided
 

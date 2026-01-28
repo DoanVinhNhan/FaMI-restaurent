@@ -47,9 +47,9 @@
                             <td>{{ item.category.name|default:"-" }}</td>
                             <td class="text-success fw-bold">
                                 {% if item.get_current_price %}
-                                {{ item.get_current_price.selling_price|floatform:0 }} ₫
+                                {{ item.get_current_price.selling_price }} ₫
                                 {% else %}
-                                {{ item.price|floatform:0 }} ₫ <span class="text-muted small">(Gốc)</span>
+                                {{ item.price }} ₫ <span class="text-muted small">(Gốc)</span>
                                 {% endif %}
                             </td>
                             <td>

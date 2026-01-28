@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     # Third-Party Apps
     'rest_framework',
@@ -93,6 +94,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'fami_project.wsgi.application'
+ASGI_APPLICATION = 'fami_project.asgi.application'
+
+# Channels Configuration
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 
 
 # 4. Database Configuration

@@ -36,11 +36,14 @@ def sales_report_view(request: HttpRequest) -> HttpResponse:
     end_str = request.GET.get('end_date')
     export = request.GET.get('export')
 
+    today = date.today()
     if not start_str or not end_str:
-        return HttpResponse("Please select a date range.", status=400)
-
-    start_date = parse_date(start_str)
-    end_date = parse_date(end_str)
+        # Fallback to defaults instead of 400
+        start_date = today - timedelta(days=30)
+        end_date = today
+    else:
+        start_date = parse_date(start_str)
+        end_date = parse_date(end_str)
 
     summary = ReportController.generate_sales_report(start_date, end_date)
 
@@ -63,10 +66,12 @@ def inventory_report_view(request: HttpRequest) -> HttpResponse:
     end_str = request.GET.get('end_date')
 
     if not start_str or not end_str:
-        return HttpResponse("Please select a date range.", status=400)
-
-    start_date = parse_date(start_str)
-    end_date = parse_date(end_str)
+        today = date.today()
+        start_date = today - timedelta(days=30)
+        end_date = today
+    else:
+        start_date = parse_date(start_str)
+        end_date = parse_date(end_str)
 
     tickets = ReportController.generate_inventory_variance_report(start_date, end_date)
 
@@ -83,10 +88,12 @@ def waste_report_view(request: HttpRequest) -> HttpResponse:
     end_str = request.GET.get('end_date')
     
     if not start_str or not end_str:
-        return HttpResponse("Please select a date range.", status=400)
-    
-    start_date = parse_date(start_str)
-    end_date = parse_date(end_str)
+        today = date.today()
+        start_date = today - timedelta(days=30)
+        end_date = today
+    else:
+        start_date = parse_date(start_str)
+        end_date = parse_date(end_str)
     
     waste_data = ReportController.generate_waste_report(start_date, end_date)
     

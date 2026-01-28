@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Prefetch
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -56,16 +57,21 @@ def kds_board_view(request: HttpRequest) -> HttpResponse:
     It separates items into 'Kitchen' and 'Bar' streams based on category configuration.
     Refreshes data automatically if using HTMX in the template.
     """
-    # 1. Fetch all OrderDetails that are active
-    # We want Pending (just arrived) and Cooking (in progress).
+    # 1. Fetch all active OrderDetails
+    # Include READY so they can be served
     active_details = OrderDetail.objects.select_related(
         'order',
         'menu_item',
         'menu_item__category'
     ).filter(
-        status__in=[Order.Status.PENDING, Order.Status.COOKING]
+        status__in=[
+            Order.Status.PENDING, 
+            Order.Status.COOKING,
+            Order.Status.READY
+        ]
     ).order_by('order__created_at', 'created_at')
 
+    # ... (rest of kds_board_view logic remains the same) ...
     # 2. Initialize containers
     kitchen_tickets: Dict[int, Dict[str, Any]] = {}
     bar_tickets: Dict[int, Dict[str, Any]] = {}
@@ -75,7 +81,6 @@ def kds_board_view(request: HttpRequest) -> HttpResponse:
         order_id = detail.order.id
         
         # Determine target station (Default to Kitchen if not specified)
-        # Category model has `printer_target` chiec: KITCHEN, BAR.
         target = getattr(detail.menu_item.category, 'printer_target', TARGET_KITCHEN)
         
         # Select the appropriate dictionary to populate
@@ -112,7 +117,7 @@ def kds_board_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def update_item_status(request: HttpRequest, detail_id: int) -> JsonResponse:
     """
-    Legacy Endpoint (HTMX) - Now delegates to Controller logic.
+    Standard status update (Pending -> Cooking -> Ready -> Served).
     """
     next_status = request.POST.get('next_status')
     if not next_status:
@@ -125,7 +130,6 @@ def update_item_status(request: HttpRequest, detail_id: int) -> JsonResponse:
             new_status=next_status,
             user=request.user
         )
-        # Return updated KDS board
         return kds_board_view(request)
         
     except ValidationError as e:
@@ -133,6 +137,46 @@ def update_item_status(request: HttpRequest, detail_id: int) -> JsonResponse:
     except Exception as e:
         logger.error(f"Error updating item status: {str(e)}")
         return JsonResponse({'error': 'Server error during update'}, status=500)
+
+@require_POST
+@login_required
+def cancel_item(request: HttpRequest, detail_id: int) -> JsonResponse:
+    """
+    Cancels an item with a reason.
+    """
+    reason = request.POST.get('reason', 'Cancelled by Kitchen')
+    try:
+        from kitchen.services import KitchenController
+        KitchenController.cancel_item(
+            order_detail_id=detail_id,
+            reason_code=reason,
+            user=request.user
+        )
+        return kds_board_view(request)
+    except ValidationError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        logger.error(f"Error cancelling item: {str(e)}")
+        return JsonResponse({'error': 'Server error'}, status=500)
+
+@require_POST
+@login_required
+def undo_item_status(request: HttpRequest, detail_id: int) -> JsonResponse:
+    """
+    Reverts item status.
+    """
+    try:
+        from kitchen.services import KitchenController
+        KitchenController.undo_last_status(
+            order_detail_id=detail_id,
+            user=request.user
+        )
+        return kds_board_view(request)
+    except ValidationError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        logger.error(f"Error undoing status: {str(e)}")
+        return JsonResponse({'error': 'Server error'}, status=500)
 
 
 # --- DRF API Views (Task 021) ---
