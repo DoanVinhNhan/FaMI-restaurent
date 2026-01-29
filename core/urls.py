@@ -17,6 +17,8 @@ urlpatterns = [
     
     # System Settings (UC7)
     path('settings/', views.SettingGroupListView.as_view(), name='setting_list'),
+    path('settings/create-group/', views.SettingGroupCreateView.as_view(), name='setting_group_create'),
+    path('settings/create/', views.SystemSettingCreateView.as_view(), name='setting_create'),
     path('settings/<str:pk>/edit/', views.SystemSettingUpdateView.as_view(), name='setting_edit'),
 
     # User Management (HR)

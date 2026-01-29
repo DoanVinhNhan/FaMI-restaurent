@@ -24,6 +24,8 @@ from menu.models import MenuItem, Category
 from sales.models import RestaurantTable, Order, OrderDetail
 from .serializers import OfflineOrderSyncSerializer
 
+from core.utils import ConfigurationManager
+
 logger = logging.getLogger(__name__)
 
 # --- Table Management Views (Task 013) ---
@@ -304,6 +306,12 @@ def submit_order(request: HttpRequest, table_id: int) -> HttpResponse:
     if request.method == 'GET':
          return HttpResponse("Method GET allowed for verification. Use POST to perform action.")
 
+    # Block POS submit when restaurant is closed
+    restaurant_status = ConfigurationManager.get_setting('RESTAURANT_STATUS', default='OPEN')
+    if str(restaurant_status).upper() == 'CLOSED':
+        messages.error(request, "Nhà hàng đang đóng cửa. Không thể gửi đơn.")
+        return redirect('sales:pos_table_detail', table_id=table.pk)
+
     if not order.details.exists():
         messages.error(request, "Cannot submit empty order.")
         return redirect('sales:pos_table_detail', table_id=table.table_id)
@@ -489,12 +497,15 @@ def process_payment(request: HttpRequest, table_id: int) -> HttpResponse:
              return redirect('sales:pos_index')
         else:
              messages.error(request, f"Payment failed: {result['message']}")
+             # Provide payment_error separately so template can render inline alerts near the form
+             payment_error = result.get('message')
              # Fallthrough to render form again
         
     return render(request, 'sales/payment_form.html', {
         'table': table, 
         'order': order,
-        'action_type': action_type
+        'action_type': action_type,
+        'payment_error': locals().get('payment_error', None)
     })
 
 @login_required

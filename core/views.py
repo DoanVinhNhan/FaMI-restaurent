@@ -103,7 +103,8 @@ from django.views.generic import ListView, UpdateView, CreateView
 from .models import SettingGroup, SystemSetting
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import SystemSettingForm # Import the form
+from .forms import SystemSettingForm, SystemSettingCreateForm, SettingGroupForm # Import the forms
+from core.mixins import RoleRequiredMixin
 
 class SettingGroupListView(LoginRequiredMixin, ListView):
     """
@@ -116,10 +117,34 @@ class SettingGroupListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return SettingGroup.objects.prefetch_related('settings').all()
 
-class SystemSettingUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class SettingGroupCreateView(RoleRequiredMixin, SuccessMessageMixin, CreateView):
+    """
+    Create a new Setting Group (Admins/Managers only).
+    """
+    allowed_roles = ['MANAGER', 'ADMIN']
+    model = SettingGroup
+    form_class = SettingGroupForm
+    template_name = 'core/setting_group_form.html'
+    success_url = reverse_lazy('core:setting_list')
+    success_message = "Setting group created successfully."
+
+class SystemSettingCreateView(RoleRequiredMixin, SuccessMessageMixin, CreateView):
+    """
+    Create a new System Setting (Admins/Managers only).
+    """
+    allowed_roles = ['MANAGER', 'ADMIN']
+    model = SystemSetting
+    form_class = SystemSettingCreateForm
+    template_name = 'core/setting_create_form.html'
+    success_url = reverse_lazy('core:setting_list')
+    success_message = "System setting created successfully."
+
+class SystemSettingUpdateView(RoleRequiredMixin, LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """
     Form to update a specific system setting value.
+    Restricted to Manager/Admins.
     """
+    allowed_roles = ['MANAGER', 'ADMIN']
     model = SystemSetting
     form_class = SystemSettingForm # Use the form class
     template_name = 'core/setting_form.html'

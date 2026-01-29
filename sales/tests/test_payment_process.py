@@ -128,6 +128,23 @@ class PaymentProcessingTests(TestCase):
         self.order.refresh_from_db()
         self.assertNotEqual(self.order.status, Order.Status.PAID)
 
+    def test_gateway_rejection_shows_inline_error(self):
+        """Simulate payment gateway rejecting the transaction and ensure error shown on form.
+        Use the promo_code 'SIM_FAIL' which triggers simulated gateway failure in PaymentController."""
+        request = self.factory.post('/sales/pos/table/1/pay/', {
+            'payment_method': 'CARD',
+            'promo_code': 'SIM_FAIL'
+        })
+        request.user = self.user
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = process_payment(request, self.table.pk)
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode('utf-8')
+        self.assertIn('Lỗi thanh toán', content)
+        self.assertIn('Simulated gateway rejection', content)
     def test_apply_promo_preview(self):
         # Create Promo: 10% off
         Promotion.objects.create(

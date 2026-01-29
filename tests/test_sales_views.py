@@ -55,6 +55,27 @@ class SalesViewTest(TestCase):
         order.refresh_from_db()
         self.assertEqual(order.status, Order.Status.COOKING)
 
+    def test_submit_order_blocked_when_restaurant_closed(self):
+        # Ensure RESTAURANT_STATUS = CLOSED
+        from core.models import SettingGroup, SystemSetting
+        group, _ = SettingGroup.objects.get_or_create(group_name='General')
+        SystemSetting.objects.update_or_create(
+            setting_key='RESTAURANT_STATUS',
+            defaults={'setting_value': 'CLOSED', 'data_type': SystemSetting.DataType.STRING, 'group': group, 'is_active': True}
+        )
+
+        # Setup pending order
+        order = Order.objects.create(table=self.table, user=self.user, status=Order.Status.PENDING, total_amount=20000)
+        OrderDetail.objects.create(order=order, menu_item=self.item, quantity=1, unit_price=20000, total_price=20000)
+
+        url = reverse('sales:pos_submit_order', args=[self.table.pk])
+        response = self.client.post(url)
+
+        # Expect redirect back to table detail and order remains pending
+        self.assertRedirects(response, reverse('sales:pos_table_detail', args=[self.table.pk]))
+        order.refresh_from_db()
+        self.assertEqual(order.status, Order.Status.PENDING)
+
     def test_process_payment(self):
         """
         Verify that payment processing flow works using the newly added view.

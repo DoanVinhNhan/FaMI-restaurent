@@ -11,6 +11,18 @@
                 </div>
                 <div class="card-body p-4">
 
+                    {% if payment_error %}
+                    <div class="alert alert-danger">
+                        <strong>Lỗi thanh toán:</strong> {{ payment_error }}
+                    </div>
+                    {% endif %}
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+
                     <!-- Bill Summary -->
                     <div class="text-center mb-4 p-3 bg-light rounded-3">
                         <small class="text-uppercase tracking-wide text-muted">Tổng thành tiền</small>

@@ -61,11 +61,19 @@ class PaymentGatewayClient:
     Adapter for external Payment Gateway (VNPay, Momo).
     """
     @staticmethod
-    def send_transaction(amount: Decimal, ref_id: str) -> dict:
+    def send_transaction(amount: Decimal, ref_id: str, simulate: bool = False) -> dict:
         """
         Mock implementation of sending a transaction.
         In a real scenario, this would POST to an external API.
+
+        Args:
+            amount: amount to charge
+            ref_id: merchant reference id
+            simulate: when True, force a simulated gateway rejection (for testing/dev)
         """
+        if simulate:
+            return {'success': False, 'gateway_ref': None, 'message': 'Simulated gateway rejection'}
+
         # Simulate Success/Fail based on some logic (e.g. amount ending in .99 fails)
         # For now, always success unless specified
         success = True
@@ -157,9 +165,11 @@ class PaymentController:
         # 4. Gateway Integration (if not CASH)
         gateway_ref = None
         if method != 'CASH':
-            gw_response = PaymentGatewayClient.send_transaction(amount, f"ORDER-{order.id}")
+            # Allow dev/test simulation by using promo_code == 'SIM_FAIL'
+            simulate_failure = (promo_code == 'SIM_FAIL')
+            gw_response = PaymentGatewayClient.send_transaction(amount, f"ORDER-{order.id}", simulate=simulate_failure)
             if not gw_response.get('success'):
-                 return {'success': False, 'message': "Payment Gateway Rejected."}
+                 return {'success': False, 'message': gw_response.get('message', "Payment Gateway Rejected.")}
             gateway_ref = gw_response.get('gateway_ref')
 
         # 5. Create Transaction (Success)
