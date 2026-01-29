@@ -11,11 +11,12 @@
                 <a href="{% url 'sales:table_create' %}" class="btn btn-outline-primary">
                     <i class="fas fa-plus me-1"></i> Tạo Bàn
                 </a>
-                <!-- Assuming a route exists or will be created. If not, link might 404. 
-                     The user asked to add the function. I should check if view exists.
-                     I found TableCreateView in sales/views.py. 
-                     I did not see CategoryCreateView in menu/views.py in Step 44.
-                     I will leave a placeholder or basic link and fix menu view later. -->
+                <a href="{% url 'core:setting_group_create' %}" class="btn btn-outline-success">
+                    <i class="fas fa-folder-plus me-1"></i> Thêm Nhóm Cấu hình
+                </a>
+                <a href="{% url 'core:setting_create' %}" class="btn btn-outline-info">
+                    <i class="fas fa-plus-circle me-1"></i> Thêm Tham số
+                </a>
                 <a href="{% url 'menu:category_list' %}" class="btn btn-outline-secondary">
                     <i class="fas fa-list me-1"></i> Quản lý Menu (Category)
                 </a>
@@ -91,8 +92,12 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>Chưa có nhóm cấu hình nào được định nghĩa.
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-info-circle me-2"></i>Chưa có nhóm cấu hình nào được định nghĩa.</div>
+            <div>
+                <a href="{% url 'core:setting_group_create' %}" class="btn btn-sm btn-success me-2">Tạo Nhóm</a>
+                <a href="{% url 'core:setting_create' %}" class="btn btn-sm btn-info">Tạo Tham số</a>
+            </div>
         </div>
         {% endif %}
     </div>

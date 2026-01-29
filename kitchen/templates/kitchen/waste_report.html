@@ -24,32 +24,30 @@
                         {% csrf_token %}
 
                         <div class="mb-3">
-                            <label for="{{ form.item_type.id_for_label }}" class="form-label">Type of Waste</label>
+                            <label for="{{ form.item_type.id_for_label }}" class="form-label">{{ form.item_type.label }}</label>
                             {{ form.item_type }}
-                            <!-- Add Bootstrap class via widget in form or JS, simplified here -->
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.item_id.id_for_label }}" class="form-label">Item ID</label>
-                            <input type="number" name="item_id" class="form-control" required id="id_item_id"
-                                placeholder="Enter ID from reference list below">
+                            <label for="{{ form.item_id.id_for_label }}" class="form-label">{{ form.item_id.label }}</label>
+                            {{ form.item_id }}
                             <div class="form-text">See reference list below for IDs.</div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
-                                <input type="number" step="0.01" name="quantity" class="form-control" required>
+                                <label for="{{ form.quantity.id_for_label }}" class="form-label">{{ form.quantity.label }}</label>
+                                {{ form.quantity }}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.reason.id_for_label }}" class="form-label">Reason</label>
+                                <label for="{{ form.reason.id_for_label }}" class="form-label">{{ form.reason.label }}</label>
                                 {{ form.reason }}
                             </div>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger btn-lg">Submit Report</button>
-                            <a href="{% url 'kitchen:waste_report' %}" class="btn btn-secondary">Clear Form</a>
+                            <button type="submit" class="btn btn-danger btn-lg" id="submitBtn">Submit Report</button>
+                            <button type="button" class="btn btn-secondary" id="clearBtn" onclick="clearWasteForm()">Clear Form</button>
                         </div>
                     </form>
                 </div>
@@ -92,4 +90,49 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Retain Data: Save form input to LocalStorage
+    document.addEventListener("DOMContentLoaded", function() {
+        const formFields = ['id_item_type', 'id_item_id', 'id_quantity', 'id_reason'];
+        
+        // Load saved data
+        formFields.forEach(id => {
+            const field = document.getElementById(id);
+            if (field) {
+                const saved = localStorage.getItem('waste_' + id);
+                if (saved && !field.value) { // Only restore if field is empty (allow server-side values to override)
+                    field.value = saved;
+                }
+                
+                // Save on change
+                field.addEventListener('change', function() {
+                    localStorage.setItem('waste_' + id, this.value);
+                });
+                field.addEventListener('input', function() {
+                    localStorage.setItem('waste_' + id, this.value);
+                });
+            }
+        });
+
+        // Clear storage on successful submit (optional, or rely on clear button)
+        // Check for success message presence
+        const alerts = document.querySelectorAll('.alert-success');
+        if (alerts.length > 0) {
+            clearLocalStorage();
+        }
+    });
+
+    function clearWasteForm() {
+        clearLocalStorage();
+        window.location.href = "{% url 'kitchen:waste_report' %}";
+    }
+
+    function clearLocalStorage() {
+        const formFields = ['id_item_type', 'id_item_id', 'id_quantity', 'id_reason'];
+        formFields.forEach(id => {
+            localStorage.removeItem('waste_' + id);
+        });
+    }
+</script>
 {% endblock %}

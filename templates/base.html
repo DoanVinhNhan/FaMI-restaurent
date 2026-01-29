@@ -155,7 +155,14 @@
                 <!-- Kitchen: Manager or Kitchen Crew -->
                 {% if user.is_manager or user.is_kitchen_crew or user.is_superuser %}
                 <li>
-                    <a href="{% url 'kitchen:kds_board' %}"><i class="fas fa-fire me-2"></i>Bếp (KDS)</a>
+                    <a href="#kitchenSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-fire me-2"></i>Bếp (Kitchen)
+                    </a>
+                    <ul class="collapse list-unstyled ps-4" id="kitchenSubmenu">
+                        <li><a href="{% url 'kitchen:kds_board' %}">KDS Board</a></li>
+                        <li><a href="{% url 'kitchen:waste_report' %}">Report Waste</a></li>
+                        <li><a href="{% url 'kitchen:menu_management' %}">Menu Management</a></li>
+                    </ul>
                 </li>
                 {% endif %}
 

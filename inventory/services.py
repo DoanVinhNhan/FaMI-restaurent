@@ -48,7 +48,9 @@ class WasteService:
                 
                 # Update Inventory
                 inv_item, _ = InventoryItem.objects.get_or_create(ingredient=ingredient)
-                inv_item.quantity_on_hand -= qty_decimal
+                # Ensure quantity_on_hand is Decimal to avoid type errors with SQLite/defaults
+                current_qty = Decimal(str(inv_item.quantity_on_hand))
+                inv_item.quantity_on_hand = current_qty - qty_decimal
                 inv_item.save()
                 
                 # Calculate loss
@@ -73,7 +75,9 @@ class WasteService:
                         required_qty = component.quantity * qty_decimal
                         
                         inv_item, _ = InventoryItem.objects.get_or_create(ingredient=component.ingredient)
-                        inv_item.quantity_on_hand -= required_qty
+                        # Ensure quantity_on_hand is Decimal
+                        current_qty = Decimal(str(inv_item.quantity_on_hand))
+                        inv_item.quantity_on_hand = current_qty - required_qty
                         inv_item.save()
                         
                         # Add to loss value
@@ -132,7 +136,8 @@ class InventoryService:
                 # Fetch Inventory Item
                 # We use get_or_create to be safe, though ideally it should exist
                 inv_item, _ = InventoryItem.objects.get_or_create(ingredient=component.ingredient)
-                inv_item.quantity_on_hand -= total_needed
+                current_qty = Decimal(str(inv_item.quantity_on_hand))
+                inv_item.quantity_on_hand = current_qty - total_needed
                 inv_item.save()
 
     @staticmethod
@@ -184,7 +189,8 @@ class InventoryService:
             total_needed = qty_decimal * component.quantity
             
             inv_item, _ = InventoryItem.objects.get_or_create(ingredient=component.ingredient)
-            inv_item.quantity_on_hand -= total_needed
+            current_qty = Decimal(str(inv_item.quantity_on_hand))
+            inv_item.quantity_on_hand = current_qty - total_needed
             inv_item.save()
             print(f"DEBUG: Deducted {total_needed} {component.unit} of {component.ingredient.name} (New Level: {inv_item.quantity_on_hand})")
 

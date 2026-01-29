@@ -21,7 +21,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/sales/pos/">POS</a></li>
-                <li class="nav-item"><a class="nav-link" href="/kitchen/board/">Kitchen</a></li>
+                <!-- Kitchen Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="kitchenDropdown" role="button" data-bs-toggle="dropdown">
+                        Kitchen
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'kitchen:kds_board' %}">KDS Board</a></li>
+                        <li><a class="dropdown-item" href="{% url 'kitchen:waste_report' %}">Report Waste</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'kitchen:menu_management' %}">Menu Management</a></li>
+                    </ul>
+                </li>
 
                 <!-- Menu Management -->
                 <li class="nav-item dropdown">

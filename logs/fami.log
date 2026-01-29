@@ -8171,3 +8171,98 @@ WARNING 2026-01-29 00:04:22,009 log Bad Request: /favicon.ico
 WARNING 2026-01-29 00:04:22,009 basehttp "GET /favicon.ico HTTP/1.1" 400 75758
 WARNING 2026-01-29 00:06:03,327 log Not Found: /favicon.ico
 WARNING 2026-01-29 00:06:03,328 basehttp "GET /favicon.ico HTTP/1.1" 404 4589
+WARNING 2026-01-29 06:43:49,186 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 06:43:49,193 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4667
+WARNING 2026-01-29 07:01:26,285 log Bad Request: /sales/api/orders/create/
+WARNING 2026-01-29 07:01:26,342 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 400 107
+WARNING 2026-01-29 07:02:18,527 log Bad Request: /sales/api/orders/create/
+WARNING 2026-01-29 07:02:18,533 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 400 45
+WARNING 2026-01-29 07:02:28,597 log Bad Request: /sales/api/orders/create/
+WARNING 2026-01-29 07:02:28,598 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 400 107
+ERROR 2026-01-29 07:04:25,565 log Service Unavailable: /sales/api/orders/create/
+ERROR 2026-01-29 07:04:25,568 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 503 43
+ERROR 2026-01-29 07:05:35,267 log Service Unavailable: /sales/api/orders/create/
+ERROR 2026-01-29 07:05:35,268 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 503 43
+WARNING 2026-01-29 07:23:53,120 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 07:23:53,231 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5051
+WARNING 2026-01-29 07:34:22,206 log Bad Request: /sales/api/orders/create/
+WARNING 2026-01-29 07:34:22,209 basehttp "POST /sales/api/orders/create/ HTTP/1.1" 400 43
+WARNING 2026-01-29 07:42:50,742 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 07:42:50,864 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5051
+ERROR 2026-01-29 09:01:57,973 log Internal Server Error: /reports/sales/
+Traceback (most recent call last):
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\FAMI_APP\reporting\views.py", line 69, in sales_report_view
+    return render(request, 'reporting/partials/sales_results.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
+    nodelist_loop = parser.parse(
+                    ^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 481, in parse
+    raise self.error(token, e)
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 479, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 693, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\huy37\miniconda3\Lib\site-packages\django\template\base.py", line 603, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'urlquote'
+ERROR 2026-01-29 09:01:58,010 basehttp "GET /reports/sales/ HTTP/1.1" 500 218686
+WARNING 2026-01-29 09:07:11,347 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 09:07:11,398 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5051
+WARNING 2026-01-29 09:07:14,042 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 09:07:14,256 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5051
+WARNING 2026-01-29 09:07:14,987 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 10:47:54,148 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-29 10:47:54,151 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5051

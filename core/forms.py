@@ -34,7 +34,7 @@ class CustomUserChangeForm(UserChangeForm):
             'is_superuser': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-from .models import SystemSetting
+from .models import SystemSetting, SettingGroup
 
 class SystemSettingForm(forms.ModelForm):
     class Meta:
@@ -42,5 +42,28 @@ class SystemSettingForm(forms.ModelForm):
         fields = ('setting_value', 'is_active')
         widgets = {
             'setting_value': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+class SettingGroupForm(forms.ModelForm):
+    class Meta:
+        model = SettingGroup
+        fields = ('group_name', 'description')
+        widgets = {
+            'group_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+
+class SystemSettingCreateForm(forms.ModelForm):
+    class Meta:
+        model = SystemSetting
+        fields = ('setting_key', 'setting_value', 'data_type', 'group', 'is_active')
+        widgets = {
+            'setting_key': forms.TextInput(attrs={'class': 'form-control'}),
+            'setting_value': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'data_type': forms.Select(attrs={'class': 'form-select'}),
+            'group': forms.Select(attrs={'class': 'form-select'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

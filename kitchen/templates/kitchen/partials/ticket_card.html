@@ -53,32 +53,57 @@
                         hx-post="{% url 'kitchen:mark_out_of_stock' item.menu_item.id %}"
                         hx-confirm="Đánh dấu món này là HẾT HÀNG? (Sẽ chặn gọi món mới)"
                         hx-target="#kds-board-container" hx-swap="innerHTML" title="Báo hết hàng">
-                        <i class="bi bi-slash-circle"></i>
+                        <i class="bi bi-slash-circle"></i> <span class="ms-1">Báo Hết</span>
                     </button>
 
                     <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'kitchen:cancel_item' item.id %}"
-                        hx-prompt="Reason for cancellation?" hx-vals='{"reason": prompt_value}'
+                        hx-confirm="Xác nhận hủy món này?"
                         hx-target="#kds-board-container" hx-swap="innerHTML">
-                        <i class="bi bi-x"></i>
+                        <i class="bi bi-x"></i> <span class="ms-1">Hủy</span>
                     </button>
+
                     {% elif item.status == 'Cooking' %}
                     <button class="btn btn-sm btn-success" hx-post="{% url 'kitchen:update_item_status' item.id %}"
                         hx-vals='{"next_status": "Ready"}' hx-target="#kds-board-container" hx-swap="innerHTML">
                         Ready
                     </button>
+
+                    <!-- Make Cancel/Out-of-Stock available while Cooking -->
+                    <button class="btn btn-sm btn-outline-dark"
+                        hx-post="{% url 'kitchen:mark_out_of_stock' item.menu_item.id %}"
+                        hx-confirm="Đánh dấu món này là HẾT HÀNG? (Sẽ chặn gọi món mới)"
+                        hx-target="#kds-board-container" hx-swap="innerHTML" title="Báo hết hàng">
+                        <i class="bi bi-slash-circle"></i> <span class="ms-1">Báo Hết</span>
+                    </button>
+
+                    <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'kitchen:cancel_item' item.id %}"
+                        hx-confirm="Xác nhận hủy món này?"
+                        hx-target="#kds-board-container" hx-swap="innerHTML">
+                        <i class="bi bi-x"></i> <span class="ms-1">Hủy</span>
+                    </button>
+
                     <button class="btn btn-sm btn-outline-secondary" hx-post="{% url 'kitchen:undo_item' item.id %}"
                         hx-target="#kds-board-container" hx-swap="innerHTML" title="Undo">
-                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <i class="bi bi-arrow-counterclockwise"></i> <span class="ms-1">Hoàn tác</span>
                     </button>
+
                     {% elif item.status == 'Ready' %}
                     <button class="btn btn-sm btn-info text-white"
                         hx-post="{% url 'kitchen:update_item_status' item.id %}" hx-vals='{"next_status": "Served"}'
                         hx-target="#kds-board-container" hx-swap="innerHTML">
                         Serve
                     </button>
+
+                    <!-- Allow cancel on Ready too (with confirmation) -->
+                    <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'kitchen:cancel_item' item.id %}"
+                        hx-confirm="Xác nhận hủy món này?"
+                        hx-target="#kds-board-container" hx-swap="innerHTML">
+                        <i class="bi bi-x"></i> <span class="ms-1">Hủy</span>
+                    </button>
+
                     <button class="btn btn-sm btn-outline-secondary" hx-post="{% url 'kitchen:undo_item' item.id %}"
                         hx-target="#kds-board-container" hx-swap="innerHTML" title="Undo">
-                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <i class="bi bi-arrow-counterclockwise"></i> <span class="ms-1">Hoàn tác</span>
                     </button>
                     {% endif %}
                 </div>
